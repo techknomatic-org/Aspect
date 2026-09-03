@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, DollarSign, BarChart2, Building2, Wallet } from 'lucide-react';
 import { KPICardData } from '../../types';
 import { SparklineChart } from '../charts/SparklineChart';
 import { useTheme } from '../../context/ThemeContext';
@@ -71,6 +71,16 @@ export const AspectGlanceRow: React.FC<AspectGlanceRowProps> = ({ cards }) => {
     }
   };
 
+  const getCardIcon = (id: string) => {
+    switch (id) {
+      case 'pat_ytd': return <DollarSign className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />;
+      case 'ebitda_ytd': return <BarChart2 className="w-3.5 h-3.5 text-[#C9A227] shrink-0" />;
+      case 'net_worth': return <Building2 className="w-3.5 h-3.5 text-[#4A6FA5] shrink-0" />;
+      case 'net_cash': return <Wallet className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />;
+      default: return <DollarSign className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />;
+    }
+  };
+
   const activeBottomCards = cards.filter((c) => c.id !== 'rev_trend');
 
   return (
@@ -78,6 +88,7 @@ export const AspectGlanceRow: React.FC<AspectGlanceRowProps> = ({ cards }) => {
       {activeBottomCards.map((card) => {
         const trend = getTelemetryData(card.id);
         const chartColor = getSparklineColor(card.id);
+        const icon = getCardIcon(card.id);
 
         return (
           <div
@@ -85,12 +96,15 @@ export const AspectGlanceRow: React.FC<AspectGlanceRowProps> = ({ cards }) => {
             className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}
           >
             <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-              <div className={`text-[11px] font-medium tracking-wider ${textMutedClass} uppercase truncate`}>
-                {card.title}
+              <div className="flex items-center gap-1.5 min-w-0">
+                {icon}
+                <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
+                  {card.title}
+                </div>
               </div>
 
               <div className="my-1">
-                <span className={`text-xl lg:text-[24px] font-semibold ${textValueClass} tracking-tight font-sans block leading-none truncate`}>
+                <span className={`text-xl lg:text-[24px] font-bold ${textValueClass} tracking-tight font-sans block leading-none truncate`}>
                   {card.value}
                 </span>
               </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, AlertTriangle, Briefcase } from 'lucide-react';
 import { SparklineChart } from '../charts/SparklineChart';
 import { CountUpNumber } from '../common/CountUpNumber';
 import { DashboardOverview } from '../../types';
@@ -26,7 +26,6 @@ const TELEMETRY_GROWTH = [
   { val: 15.6 }, { val: 15.4 }, { val: 15.8 }, { val: 15.9 }
 ];
 
-// Active alerts reduction trend — smooth gradual reduction from 142 down to 128
 const TELEMETRY_ALERTS = [
   { val: 142 }, { val: 141 }, { val: 140 }, { val: 138 },
   { val: 139 }, { val: 136 }, { val: 137 }, { val: 134 },
@@ -59,11 +58,15 @@ export const TopKPIRow: React.FC<TopKPIRowProps> = ({ overview }) => {
       {/* 1. GROUP REVENUE (YTD) */}
       <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
         <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className={`text-[11px] font-medium tracking-wider ${textMutedClass} uppercase truncate`}>
-            GROUP REVENUE (YTD)
+          <div className="flex items-center gap-1.5 min-w-0">
+            <DollarSign className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />
+            <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
+              GROUP REVENUE (YTD)
+            </div>
           </div>
+
           <div className="my-1">
-            <span className={`text-xl lg:text-[24px] font-semibold ${textValueClass} tracking-tight font-sans block leading-none`}>
+            <span className={`text-xl lg:text-[24px] font-bold ${textValueClass} tracking-tight font-sans block leading-none`}>
               <CountUpNumber end={overview.revenueNumeric || 24852} prefix="₹ " suffix=" Cr" duration={750} />
             </span>
           </div>
@@ -82,11 +85,15 @@ export const TopKPIRow: React.FC<TopKPIRowProps> = ({ overview }) => {
       {/* 2. YoY GROWTH */}
       <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
         <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className={`text-[11px] font-medium tracking-wider ${textMutedClass} uppercase truncate`}>
-            YoY GROWTH
+          <div className="flex items-center gap-1.5 min-w-0">
+            <TrendingUp className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />
+            <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
+              YoY GROWTH
+            </div>
           </div>
+
           <div className="my-1">
-            <span className={`text-xl lg:text-[24px] font-semibold ${textValueClass} tracking-tight font-sans block leading-none`}>
+            <span className={`text-xl lg:text-[24px] font-bold ${textValueClass} tracking-tight font-sans block leading-none`}>
               <CountUpNumber end={15.9} decimals={1} suffix="%" duration={750} />
             </span>
           </div>
@@ -105,33 +112,41 @@ export const TopKPIRow: React.FC<TopKPIRowProps> = ({ overview }) => {
       {/* 3. ACTIVE ALERTS */}
       <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
         <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className={`text-[11px] font-medium tracking-wider ${textMutedClass} uppercase truncate`}>
-            ACTIVE ALERTS
+          <div className="flex items-center gap-1.5 min-w-0">
+            <AlertTriangle className="w-3.5 h-3.5 text-[#E61C40] shrink-0" />
+            <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
+              ACTIVE ALERTS
+            </div>
           </div>
+
           <div className="my-1">
-            <span className={`text-xl lg:text-[24px] font-semibold ${textValueClass} tracking-tight font-sans block leading-none`}>
+            <span className={`text-xl lg:text-[24px] font-bold ${textValueClass} tracking-tight font-sans block leading-none`}>
               128
             </span>
           </div>
           <div className="flex items-center gap-2 text-[11px] whitespace-nowrap">
-            <span className="font-semibold text-[#D60132] flex items-center">
+            <span className="font-semibold text-[#E61C40] flex items-center">
               <TrendingDown className="w-3 h-3 mr-1 inline" /> ▼ 14 (-9.8%) vs prev
             </span>
           </div>
         </div>
         <div className="w-[100px] h-[48px] flex items-end shrink-0 ml-2">
-          <SparklineChart color="#D60132" data={TELEMETRY_ALERTS} height={48} width={100} />
+          <SparklineChart color="#E61C40" data={TELEMETRY_ALERTS} height={48} width={100} />
         </div>
       </div>
 
       {/* 4. GROUP PIPELINE VALUE */}
       <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
         <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className={`text-[11px] font-medium tracking-wider ${textMutedClass} uppercase truncate`}>
-            PIPELINE VALUE
+          <div className="flex items-center gap-1.5 min-w-0">
+            <Briefcase className="w-3.5 h-3.5 text-[#C9A227] shrink-0" />
+            <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
+              PIPELINE VALUE
+            </div>
           </div>
+
           <div className="my-1">
-            <span className={`text-xl lg:text-[24px] font-semibold ${textValueClass} tracking-tight font-sans block leading-none`}>
+            <span className={`text-xl lg:text-[24px] font-bold ${textValueClass} tracking-tight font-sans block leading-none`}>
               <CountUpNumber end={49650} prefix="₹ " suffix=" Cr" duration={750} />
             </span>
           </div>
