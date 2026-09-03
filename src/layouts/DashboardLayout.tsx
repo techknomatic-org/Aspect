@@ -95,7 +95,9 @@ export const DashboardLayout: React.FC = () => {
 
   return (
     <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 ${
-      theme === 'light' ? 'bg-[#EEF1F8] text-[#1F2937]' : 'bg-[#0B1426] bg-dot-pattern text-slate-100'
+      theme === 'light'
+        ? 'bg-[#EEF1F8] text-[#0F172A]'
+        : 'bg-[#0B1426] bg-dot-pattern text-white'
     }`}>
       {/* Header Bar */}
       <Header
