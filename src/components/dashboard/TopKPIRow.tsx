@@ -9,7 +9,6 @@ interface TopKPIRowProps {
   overview: DashboardOverview;
 }
 
-// Smooth realistic telemetry trend curves
 const TELEMETRY_REVENUE = [
   { val: 21452 }, { val: 21700 }, { val: 21600 }, { val: 22100 },
   { val: 22400 }, { val: 22200 }, { val: 22800 }, { val: 23100 },
@@ -58,107 +57,135 @@ export const TopKPIRow: React.FC<TopKPIRowProps> = ({ overview }) => {
       {/* 1. GROUP REVENUE (YTD) */}
       <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
         <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <DollarSign className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />
-            <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
-              GROUP REVENUE (YTD)
+          <div className="flex items-center justify-between gap-2 pr-2">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <DollarSign className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />
+              <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
+                GROUP REVENUE (YTD)
+              </div>
             </div>
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0E7C7B]/15 border border-[#0E7C7B]/30 text-[#0E7C7B] hidden xl:inline-block">
+              Target: ₹22.5k Cr
+            </span>
           </div>
 
-          <div className="my-1">
-            <span className={`text-xl lg:text-[24px] font-bold ${textValueClass} tracking-tight font-sans block leading-none`}>
+          <div className="my-0.5">
+            <span className={`text-xl lg:text-[25px] font-extrabold ${textValueClass} tracking-tight font-sans block leading-none`}>
               <CountUpNumber end={overview.revenueNumeric || 24852} prefix="₹ " suffix=" Cr" duration={750} />
             </span>
           </div>
-          <div className="flex items-center gap-3 text-[11px] whitespace-nowrap">
+
+          <div className="flex items-center gap-2.5 text-[11px] whitespace-nowrap">
             <span className={textMutedClass}>vs LY {overview.revenueVsLY || '₹ 21,452 Cr'}</span>
             <span className="font-semibold text-[#0E7C7B] flex items-center shrink-0">
-              <TrendingUp className="w-3 h-3 mr-1 inline" /> ▲ {overview.revenueChangePct || 15.9}%
+              <TrendingUp className="w-3 h-3 mr-0.5 inline" /> ▲ {overview.revenueChangePct || 15.9}%
             </span>
           </div>
         </div>
-        <div className="w-[100px] h-[48px] flex items-end shrink-0 ml-2">
-          <SparklineChart color="#0E7C7B" data={TELEMETRY_REVENUE} height={48} width={100} />
+
+        <div className="w-[115px] lg:w-[135px] h-[52px] flex items-end shrink-0 ml-1.5">
+          <SparklineChart color="#0E7C7B" data={TELEMETRY_REVENUE} height={52} width={135} />
         </div>
       </div>
 
       {/* 2. YoY GROWTH */}
       <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
         <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <TrendingUp className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />
-            <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
-              YoY GROWTH
+          <div className="flex items-center justify-between gap-2 pr-2">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <TrendingUp className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />
+              <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
+                YoY GROWTH
+              </div>
             </div>
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0E7C7B]/15 border border-[#0E7C7B]/30 text-[#0E7C7B] hidden xl:inline-block">
+              Target: 14.0%
+            </span>
           </div>
 
-          <div className="my-1">
-            <span className={`text-xl lg:text-[24px] font-bold ${textValueClass} tracking-tight font-sans block leading-none`}>
+          <div className="my-0.5">
+            <span className={`text-xl lg:text-[25px] font-extrabold ${textValueClass} tracking-tight font-sans block leading-none`}>
               <CountUpNumber end={15.9} decimals={1} suffix="%" duration={750} />
             </span>
           </div>
-          <div className="flex items-center gap-3 text-[11px] whitespace-nowrap">
+
+          <div className="flex items-center gap-2.5 text-[11px] whitespace-nowrap">
             <span className={textMutedClass}>vs LY 11.3%</span>
             <span className="font-semibold text-[#0E7C7B] flex items-center shrink-0">
-              <TrendingUp className="w-3 h-3 mr-1 inline" /> ▲ 4.6pp
+              <TrendingUp className="w-3 h-3 mr-0.5 inline" /> ▲ 4.6pp
             </span>
           </div>
         </div>
-        <div className="w-[100px] h-[48px] flex items-end shrink-0 ml-2">
-          <SparklineChart color="#0E7C7B" data={TELEMETRY_GROWTH} height={48} width={100} />
+
+        <div className="w-[115px] lg:w-[135px] h-[52px] flex items-end shrink-0 ml-1.5">
+          <SparklineChart color="#0E7C7B" data={TELEMETRY_GROWTH} height={52} width={135} />
         </div>
       </div>
 
       {/* 3. ACTIVE ALERTS */}
       <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
         <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <AlertTriangle className="w-3.5 h-3.5 text-[#E61C40] shrink-0" />
-            <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
-              ACTIVE ALERTS
+          <div className="flex items-center justify-between gap-2 pr-2">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <AlertTriangle className="w-3.5 h-3.5 text-[#E61C40] shrink-0" />
+              <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
+                ACTIVE ALERTS
+              </div>
             </div>
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#E61C40]/15 border border-[#E61C40]/30 text-[#E61C40] hidden xl:inline-block">
+              14 Resolved
+            </span>
           </div>
 
-          <div className="my-1">
-            <span className={`text-xl lg:text-[24px] font-bold ${textValueClass} tracking-tight font-sans block leading-none`}>
+          <div className="my-0.5">
+            <span className={`text-xl lg:text-[25px] font-extrabold ${textValueClass} tracking-tight font-sans block leading-none`}>
               128
             </span>
           </div>
+
           <div className="flex items-center gap-2 text-[11px] whitespace-nowrap">
             <span className="font-semibold text-[#E61C40] flex items-center">
-              <TrendingDown className="w-3 h-3 mr-1 inline" /> ▼ 14 (-9.8%) vs prev
+              <TrendingDown className="w-3 h-3 mr-0.5 inline" /> ▼ 14 (-9.8%) vs prev
             </span>
           </div>
         </div>
-        <div className="w-[100px] h-[48px] flex items-end shrink-0 ml-2">
-          <SparklineChart color="#E61C40" data={TELEMETRY_ALERTS} height={48} width={100} />
+
+        <div className="w-[115px] lg:w-[135px] h-[52px] flex items-end shrink-0 ml-1.5">
+          <SparklineChart color="#E61C40" data={TELEMETRY_ALERTS} height={52} width={135} />
         </div>
       </div>
 
       {/* 4. GROUP PIPELINE VALUE */}
       <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
         <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <Briefcase className="w-3.5 h-3.5 text-[#C9A227] shrink-0" />
-            <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
-              PIPELINE VALUE
+          <div className="flex items-center justify-between gap-2 pr-2">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Briefcase className="w-3.5 h-3.5 text-[#C9A227] shrink-0" />
+              <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
+                PIPELINE VALUE
+              </div>
             </div>
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#C9A227]/15 border border-[#C9A227]/30 text-[#C9A227] hidden xl:inline-block">
+              Target: ₹45.0k Cr
+            </span>
           </div>
 
-          <div className="my-1">
-            <span className={`text-xl lg:text-[24px] font-bold ${textValueClass} tracking-tight font-sans block leading-none`}>
+          <div className="my-0.5">
+            <span className={`text-xl lg:text-[25px] font-extrabold ${textValueClass} tracking-tight font-sans block leading-none`}>
               <CountUpNumber end={49650} prefix="₹ " suffix=" Cr" duration={750} />
             </span>
           </div>
-          <div className="flex items-center gap-3 text-[11px] whitespace-nowrap">
+
+          <div className="flex items-center gap-2.5 text-[11px] whitespace-nowrap">
             <span className={textMutedClass}>vs LY ₹ 42,100 Cr</span>
             <span className="font-semibold text-[#C9A227] flex items-center shrink-0">
-              <TrendingUp className="w-3 h-3 mr-1 inline" /> ▲ 17.9%
+              <TrendingUp className="w-3 h-3 mr-0.5 inline" /> ▲ 17.9%
             </span>
           </div>
         </div>
-        <div className="w-[100px] h-[48px] flex items-end shrink-0 ml-2">
-          <SparklineChart color="#C9A227" data={TELEMETRY_PIPELINE} height={48} width={100} />
+
+        <div className="w-[115px] lg:w-[135px] h-[52px] flex items-end shrink-0 ml-1.5">
+          <SparklineChart color="#C9A227" data={TELEMETRY_PIPELINE} height={52} width={135} />
         </div>
       </div>
     </div>

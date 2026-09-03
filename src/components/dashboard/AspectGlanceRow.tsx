@@ -81,6 +81,16 @@ export const AspectGlanceRow: React.FC<AspectGlanceRowProps> = ({ cards }) => {
     }
   };
 
+  const getTargetBadge = (id: string) => {
+    switch (id) {
+      case 'pat_ytd': return <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0E7C7B]/15 border border-[#0E7C7B]/30 text-[#0E7C7B] hidden xl:inline-block">Target: ₹3.8k Cr</span>;
+      case 'ebitda_ytd': return <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#C9A227]/15 border border-[#C9A227]/30 text-[#C9A227] hidden xl:inline-block">Target: 22.0%</span>;
+      case 'net_worth': return <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#4A6FA5]/15 border border-[#4A6FA5]/30 text-[#4A6FA5] hidden xl:inline-block">Target: ₹18.0k Cr</span>;
+      case 'net_cash': return <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0E7C7B]/15 border border-[#0E7C7B]/30 text-[#0E7C7B] hidden xl:inline-block">Target: ₹6.0k Cr</span>;
+      default: return null;
+    }
+  };
+
   const activeBottomCards = cards.filter((c) => c.id !== 'rev_trend');
 
   return (
@@ -89,6 +99,7 @@ export const AspectGlanceRow: React.FC<AspectGlanceRowProps> = ({ cards }) => {
         const trend = getTelemetryData(card.id);
         const chartColor = getSparklineColor(card.id);
         const icon = getCardIcon(card.id);
+        const badge = getTargetBadge(card.id);
 
         return (
           <div
@@ -96,33 +107,36 @@ export const AspectGlanceRow: React.FC<AspectGlanceRowProps> = ({ cards }) => {
             className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}
           >
             <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                {icon}
-                <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
-                  {card.title}
+              <div className="flex items-center justify-between gap-2 pr-2">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  {icon}
+                  <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
+                    {card.title}
+                  </div>
                 </div>
+                {badge}
               </div>
 
-              <div className="my-1">
-                <span className={`text-xl lg:text-[24px] font-bold ${textValueClass} tracking-tight font-sans block leading-none truncate`}>
+              <div className="my-0.5">
+                <span className={`text-xl lg:text-[25px] font-extrabold ${textValueClass} tracking-tight font-sans block leading-none truncate`}>
                   {card.value}
                 </span>
               </div>
 
-              <div className="flex items-center gap-3 text-[11px] whitespace-nowrap">
+              <div className="flex items-center gap-2.5 text-[11px] whitespace-nowrap">
                 <span className={textMutedClass}>vs LY {card.subtitle?.replace('vs LY ', '') || 'Previous'}</span>
                 <span className="font-semibold text-[#0E7C7B] flex items-center shrink-0">
-                  <TrendingUp className="w-3 h-3 mr-1 inline" /> {card.change}
+                  <TrendingUp className="w-3 h-3 mr-0.5 inline" /> {card.change}
                 </span>
               </div>
             </div>
 
-            <div className="w-[100px] h-[48px] flex items-end shrink-0 ml-2">
+            <div className="w-[115px] lg:w-[135px] h-[52px] flex items-end shrink-0 ml-1.5">
               <SparklineChart
                 color={chartColor}
                 data={trend}
-                height={48}
-                width={100}
+                height={52}
+                width={135}
               />
             </div>
           </div>
