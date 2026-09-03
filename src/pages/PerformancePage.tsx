@@ -8,12 +8,6 @@ export const PerformancePage: React.FC = () => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
 
-  const card = isLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-[#0E172E]/90 border-navy-700/60 shadow-xl';
-  const textPrimary = isLight ? 'text-slate-900' : 'text-white';
-  const textSec = isLight ? 'text-slate-500' : 'text-slate-400';
-  const innerCard = isLight ? 'bg-slate-50 border-slate-200' : 'bg-[#0A1021] border-slate-800';
-  const divider = isLight ? 'border-slate-200' : 'border-slate-800';
-
   const performanceKpis = [
     { title: 'GROUP REVENUE (YTD)', val: '₹ 24,852 Cr', ly: '₹ 21,452 Cr', diff: '▲ 15.9%', color: '#8B5CF6' },
     { title: 'PROFIT AFTER TAX (YTD)', val: '₹ 4,152 Cr', ly: '₹ 3,500 Cr', diff: '▲ 18.7%', color: '#10B981' },
@@ -21,14 +15,6 @@ export const PerformancePage: React.FC = () => {
     { title: 'EBITDA MARGIN', val: '22.1%', ly: '19.4%', diff: '▲ 2.7pp', color: '#14B8A6' },
     { title: 'NET CASH POSITION', val: '₹ 6,842 Cr', ly: '₹ 6,230 Cr', diff: '▲ 9.8%', color: '#3B82F6' },
     { title: 'NET WORTH', val: '₹ 18,650 Cr', ly: '₹ 16,590 Cr', diff: '▲ 12.4%', color: '#EC4899' },
-  ];
-
-  const tableRows = [
-    { name: 'Bullion & Refinery', rev: '₹ 5,820 Cr', ebitda: '18.2%', growth: '▲ 14.8%', contrib: '23.4%' },
-    { name: 'Energy',             rev: '₹ 4,280 Cr', ebitda: '31.2%', growth: '▲ 18.4%', contrib: '17.2%' },
-    { name: 'Realty',             rev: '₹ 4,120 Cr', ebitda: '28.4%', growth: '▲ 21.5%', contrib: '16.6%' },
-    { name: 'Infrastructure',     rev: '₹ 3,450 Cr', ebitda: '19.8%', growth: '▲ 9.2%',  contrib: '13.9%' },
-    { name: 'Industries',         rev: '₹ 3,110 Cr', ebitda: '24.1%', growth: '▲ 16.7%', contrib: '12.5%' },
   ];
 
   return (
@@ -40,26 +26,33 @@ export const PerformancePage: React.FC = () => {
     >
       <div className="flex items-center justify-between">
         <div>
-          <span className="text-[11px] font-outfit font-extrabold tracking-widest text-gold uppercase">
+          <span className="text-[11px] font-semibold tracking-wider text-[#C9A227] uppercase">
             GROUP FINANCIAL PERFORMANCE
           </span>
-          <h1 className={`text-2xl font-outfit font-extrabold tracking-tight uppercase ${textPrimary}`}>
+          <h1 className={`text-2xl font-bold tracking-tight uppercase ${isLight ? 'text-slate-900' : 'text-white'}`}>
             FINANCIAL POSITION & MARGIN ANALYTICS
           </h1>
         </div>
-        <span className={`text-xs ${textSec}`}>Audited Financial Feeds • FY2026 YTD</span>
+        <span className={`text-xs ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Audited Financial Feeds • FY2026 YTD</span>
       </div>
 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {performanceKpis.map((kpi, i) => (
-          <div key={i} className={`p-4 rounded-xl border flex flex-col justify-between ${card}`}>
+          <div
+            key={i}
+            className={`p-4 rounded-xl border flex flex-col justify-between ${
+              isLight ? 'bg-white border-slate-200 shadow-sm text-slate-800' : 'bg-[#131C2E] border-slate-800 shadow-xl text-slate-100'
+            }`}
+          >
             <div>
-              <span className={`text-[10px] font-mono uppercase font-bold block ${textSec}`}>{kpi.title}</span>
-              <span className={`text-xl font-outfit font-extrabold block mt-1 ${textPrimary}`}>{kpi.val}</span>
+              <span className={`text-[10px] font-mono uppercase font-bold block ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>{kpi.title}</span>
+              <span className={`text-xl font-bold block mt-1 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                {kpi.val}
+              </span>
               <div className="flex items-center justify-between text-[11px] mt-1">
-                <span className={textSec}>vs LY {kpi.ly}</span>
-                <span className="font-bold text-emerald-400">{kpi.diff}</span>
+                <span className={isLight ? 'text-slate-500' : 'text-slate-400'}>vs LY {kpi.ly}</span>
+                <span className="font-bold text-[#0E7C7B]">{kpi.diff}</span>
               </div>
             </div>
             <div className="mt-3">
@@ -71,13 +64,15 @@ export const PerformancePage: React.FC = () => {
 
       {/* Financial Statement Tables & Trends */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className={`lg:col-span-8 p-6 rounded-2xl border ${card}`}>
-          <h3 className="text-xs font-outfit font-extrabold text-gold uppercase tracking-wider pb-3 border-b border-slate-300/20">
+        <div className={`lg:col-span-8 p-6 rounded-2xl border ${
+          isLight ? 'bg-white border-slate-200 shadow-sm text-slate-800' : 'bg-[#131C2E] border-slate-800 shadow-xl text-slate-100'
+        }`}>
+          <h3 className="text-xs font-bold text-[#C9A227] uppercase tracking-wider pb-3 border-b border-slate-700/50">
             BUSINESS REVENUE & EBITDA CONTRIBUTION MATRIX
           </h3>
           <table className="w-full text-left text-xs mt-4">
             <thead>
-              <tr className={`border-b text-[10px] uppercase font-bold ${textSec} ${divider}`}>
+              <tr className={`border-b text-[10px] uppercase font-bold ${isLight ? 'border-slate-200 text-slate-500' : 'border-slate-800 text-slate-400'}`}>
                 <th className="py-2">Business Division</th>
                 <th className="py-2">YTD Revenue</th>
                 <th className="py-2">EBITDA Margin</th>
@@ -85,36 +80,64 @@ export const PerformancePage: React.FC = () => {
                 <th className="py-2 text-right">Contribution %</th>
               </tr>
             </thead>
-            <tbody className={`divide-y font-medium ${isLight ? 'divide-slate-100' : 'divide-slate-800/40'}`}>
-              {tableRows.map((row, i) => (
-                <tr key={i}>
-                  <td className="py-3 font-bold text-gold">{row.name}</td>
-                  <td className={`py-3 font-semibold ${textPrimary}`}>{row.rev}</td>
-                  <td className="py-3 text-teal-400 font-semibold">{row.ebitda}</td>
-                  <td className="py-3 text-emerald-400 font-semibold">{row.growth}</td>
-                  <td className={`py-3 text-right font-extrabold ${textPrimary}`}>{row.contrib}</td>
-                </tr>
-              ))}
+            <tbody className={`divide-y font-medium ${isLight ? 'divide-slate-200 text-slate-700' : 'divide-slate-800/40 text-slate-200'}`}>
+              <tr>
+                <td className="py-3 font-bold text-[#C9A227]">Bullion & Refinery</td>
+                <td className={`py-3 font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>₹ 5,820 Cr</td>
+                <td className="py-3 text-[#0E7C7B] font-semibold">18.2%</td>
+                <td className="py-3 text-[#0E7C7B] font-semibold">▲ 14.8%</td>
+                <td className={`py-3 text-right font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>23.4%</td>
+              </tr>
+              <tr>
+                <td className="py-3 font-bold text-[#C9A227]">Energy</td>
+                <td className={`py-3 font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>₹ 4,280 Cr</td>
+                <td className="py-3 text-[#0E7C7B] font-semibold">31.2%</td>
+                <td className="py-3 text-[#0E7C7B] font-semibold">▲ 18.4%</td>
+                <td className={`py-3 text-right font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>17.2%</td>
+              </tr>
+              <tr>
+                <td className="py-3 font-bold text-[#C9A227]">Realty</td>
+                <td className={`py-3 font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>₹ 4,120 Cr</td>
+                <td className="py-3 text-[#0E7C7B] font-semibold">28.4%</td>
+                <td className="py-3 text-[#0E7C7B] font-semibold">▲ 21.5%</td>
+                <td className={`py-3 text-right font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>16.6%</td>
+              </tr>
+              <tr>
+                <td className="py-3 font-bold text-[#C9A227]">Infrastructure</td>
+                <td className={`py-3 font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>₹ 3,450 Cr</td>
+                <td className="py-3 text-[#0E7C7B] font-semibold">19.8%</td>
+                <td className="py-3 text-[#0E7C7B] font-semibold">▲ 9.2%</td>
+                <td className={`py-3 text-right font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>13.9%</td>
+              </tr>
+              <tr>
+                <td className="py-3 font-bold text-[#C9A227]">Industries</td>
+                <td className={`py-3 font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>₹ 3,110 Cr</td>
+                <td className="py-3 text-[#0E7C7B] font-semibold">24.1%</td>
+                <td className="py-3 text-[#0E7C7B] font-semibold">▲ 16.7%</td>
+                <td className={`py-3 text-right font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>12.5%</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <div className={`lg:col-span-4 p-6 rounded-2xl border ${card}`}>
-          <h3 className="text-xs font-outfit font-extrabold text-gold uppercase tracking-wider pb-3 border-b border-slate-300/20">
+        <div className={`lg:col-span-4 p-6 rounded-2xl border ${
+          isLight ? 'bg-white border-slate-200 shadow-sm text-slate-800' : 'bg-[#131C2E] border-slate-800 shadow-xl text-slate-100'
+        }`}>
+          <h3 className="text-xs font-bold text-[#C9A227] uppercase tracking-wider pb-3 border-b border-slate-700/50">
             CAPITAL EFFICIENCY SUMMARY
           </h3>
           <div className="space-y-4 mt-4 text-xs">
-            <div className={`p-3 rounded-xl border ${innerCard}`}>
-              <span className={`text-[10px] block uppercase ${textSec}`}>Return on Invested Capital (ROIC)</span>
-              <span className="text-lg font-extrabold text-emerald-400 mt-0.5 block">18.4% (+2.1pp)</span>
+            <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-[#0B1426] border-slate-800'}`}>
+              <span className={`text-[10px] block uppercase ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Return on Invested Capital (ROIC)</span>
+              <span className="text-lg font-bold text-[#0E7C7B] mt-0.5 block">18.4% (+2.1pp)</span>
             </div>
-            <div className={`p-3 rounded-xl border ${innerCard}`}>
-              <span className={`text-[10px] block uppercase ${textSec}`}>Debt-to-EBITDA Ratio</span>
-              <span className="text-lg font-extrabold text-teal-400 mt-0.5 block">1.24x (Ultra Low Risk)</span>
+            <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-[#0B1426] border-slate-800'}`}>
+              <span className={`text-[10px] block uppercase ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Debt-to-EBITDA Ratio</span>
+              <span className="text-lg font-bold text-[#0E7C7B] mt-0.5 block">1.24x (Ultra Low Risk)</span>
             </div>
-            <div className={`p-3 rounded-xl border ${innerCard}`}>
-              <span className={`text-[10px] block uppercase ${textSec}`}>Operating Cash Flow Conversion</span>
-              <span className="text-lg font-extrabold text-gold mt-0.5 block">92.6% of EBITDA</span>
+            <div className={`p-3.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-[#0B1426] border-slate-800'}`}>
+              <span className={`text-[10px] block uppercase ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Operating Cash Flow Conversion</span>
+              <span className="text-lg font-bold text-[#C9A227] mt-0.5 block">92.6% of EBITDA</span>
             </div>
           </div>
         </div>

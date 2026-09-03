@@ -98,17 +98,23 @@ const getKPITrendData = (idx: number, isPositive: boolean) => {
   const positiveVariations = [
     [{ val: 210 }, { val: 225 }, { val: 218 }, { val: 240 }, { val: 255 }, { val: 248 }, { val: 280 }],
     [{ val: 11.2 }, { val: 12.0 }, { val: 12.8 }, { val: 12.4 }, { val: 13.8 }, { val: 14.5 }, { val: 15.6 }],
-    [{ val: 72 }, { val: 78 }, { val: 75 }, { val: 82 }, { val: 88 }, { val: 85 }, { val: 92 }],
-    [{ val: 5100 }, { val: 5400 }, { val: 5250 }, { val: 6100 }, { val: 6800 }, { val: 7400 }, { val: 8200 }],
-    [{ val: 15.8 }, { val: 16.4 }, { val: 16.2 }, { val: 17.0 }, { val: 17.5 }, { val: 17.8 }, { val: 18.2 }],
-    [{ val: 64 }, { val: 66 }, { val: 65 }, { val: 67 }, { val: 68 }, { val: 68 }, { val: 69 }],
+    [{ val: 45 }, { val: 48 }, { val: 52 }, { val: 50 }, { val: 56 }, { val: 62 }, { val: 68 }],
+    [{ val: 1200 }, { val: 1280 }, { val: 1340 }, { val: 1390 }, { val: 1450 }, { val: 1520 }, { val: 1600 }],
+    [{ val: 82 }, { val: 85 }, { val: 88 }, { val: 86 }, { val: 91 }, { val: 94 }, { val: 98 }],
+    [{ val: 320 }, { val: 340 }, { val: 360 }, { val: 380 }, { val: 410 }, { val: 430 }, { val: 460 }],
   ];
 
-  const negativeVariation = [
-    { val: 5 }, { val: 4 }, { val: 4 }, { val: 3 }, { val: 3 }, { val: 2 }, { val: 1 }
+  const negativeVariations = [
+    [{ val: 320 }, { val: 310 }, { val: 295 }, { val: 305 }, { val: 280 }, { val: 270 }, { val: 250 }],
+    [{ val: 18.5 }, { val: 17.2 }, { val: 16.8 }, { val: 15.9 }, { val: 15.2 }, { val: 14.8 }, { val: 14.2 }],
+    [{ val: 85 }, { val: 82 }, { val: 78 }, { val: 75 }, { val: 72 }, { val: 69 }, { val: 65 }],
+    [{ val: 450 }, { val: 430 }, { val: 420 }, { val: 400 }, { val: 390 }, { val: 375 }, { val: 360 }],
+    [{ val: 95 }, { val: 92 }, { val: 88 }, { val: 85 }, { val: 82 }, { val: 79 }, { val: 76 }],
+    [{ val: 120 }, { val: 115 }, { val: 110 }, { val: 105 }, { val: 98 }, { val: 92 }, { val: 85 }],
   ];
 
-  return isPositive ? positiveVariations[idx % positiveVariations.length] : negativeVariation;
+  const variation = isPositive ? positiveVariations : negativeVariations;
+  return variation[idx % variation.length];
 };
 
 export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
@@ -125,6 +131,7 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
 
   const panelBg = isLight ? 'bg-[#EEF1F8] border-slate-300 shadow-sm' : 'bg-[#0B1426] border-white/10 shadow-2xl';
   const cardBg = isLight ? 'bg-white border-slate-200' : 'bg-[#172033] border-white/10';
+  const innerCardBg = isLight ? 'bg-slate-50 border-slate-200' : 'bg-[#0B1426] border-slate-800';
   const textMuted = isLight ? 'text-[#6B7280]' : 'text-[#94A3B8]';
   const textPrimary = isLight ? 'text-[#1F2937]' : 'text-white';
 
@@ -173,7 +180,9 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
 
         {/* Executive Summary Brief Banner */}
         {execData && (
-          <div className="mt-3 p-3 rounded-xl bg-[#172033] border border-white/10 text-[11px] text-[#94A3B8] font-medium leading-relaxed">
+          <div className={`mt-3 p-3 rounded-xl border text-[11px] font-medium leading-relaxed ${
+            isLight ? 'bg-white border-slate-200 text-slate-700' : 'bg-[#172033] border-white/10 text-[#94A3B8]'
+          }`}>
             <span className="text-[#C9A227] font-bold block uppercase mb-0.5 text-[10px] tracking-wider">
               EXECUTIVE SUMMARY
             </span>
@@ -181,13 +190,15 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
           </div>
         )}
 
-        {/* Navigation View Switcher Tabs (No "CEO" word) */}
-        <div className="flex items-center gap-1.5 mt-3 p-1 rounded-xl bg-[#0B1426] border border-white/10 text-xs font-bold">
+        {/* Navigation View Switcher Tabs */}
+        <div className={`flex items-center gap-1.5 mt-3 p-1 rounded-xl border text-xs font-bold ${
+          isLight ? 'bg-slate-200 border-slate-300' : 'bg-[#0B1426] border-white/10'
+        }`}>
           <button
             onClick={() => setActiveTab('kpi')}
             className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${activeTab === 'kpi'
-                ? 'bg-[#172033] text-[#C9A227] shadow'
-                : 'text-[#94A3B8] hover:text-white'
+                ? isLight ? 'bg-white text-[#1F2937] shadow' : 'bg-[#172033] text-[#C9A227] shadow'
+                : isLight ? 'text-slate-600 hover:text-slate-900' : 'text-[#94A3B8] hover:text-white'
               }`}
           >
             📊 Key Metrics
@@ -195,8 +206,8 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
           <button
             onClick={() => setActiveTab('brief')}
             className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${activeTab === 'brief'
-                ? 'bg-[#172033] text-[#C9A227] shadow'
-                : 'text-[#94A3B8] hover:text-white'
+                ? isLight ? 'bg-white text-[#1F2937] shadow' : 'bg-[#172033] text-[#C9A227] shadow'
+                : isLight ? 'text-slate-600 hover:text-slate-900' : 'text-[#94A3B8] hover:text-white'
               }`}
           >
             🎯 Strategic Brief
@@ -204,8 +215,8 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
           <button
             onClick={() => setActiveTab('projects')}
             className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${activeTab === 'projects'
-                ? 'bg-[#172033] text-[#C9A227] shadow'
-                : 'text-[#94A3B8] hover:text-white'
+                ? isLight ? 'bg-white text-[#1F2937] shadow' : 'bg-[#172033] text-[#C9A227] shadow'
+                : isLight ? 'text-slate-600 hover:text-slate-900' : 'text-[#94A3B8] hover:text-white'
               }`}
           >
             🚀 Projects
@@ -283,11 +294,11 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
                   {execData.ceoAttentionItems[0].severity}
                 </span>
               </div>
-              <h4 className="text-xs font-bold text-white">{execData.ceoAttentionItems[0].issue}</h4>
+              <h4 className={`text-xs font-bold ${textPrimary}`}>{execData.ceoAttentionItems[0].issue}</h4>
               <div className="text-[11px] text-[#C1502E] font-bold">
                 Impact: {execData.ceoAttentionItems[0].financialImpact}
               </div>
-              <p className="text-[11px] text-[#94A3B8]">
+              <p className={`text-[11px] ${textMuted}`}>
                 <strong className="text-[#C9A227]">Strategic Action: </strong>
                 {execData.ceoAttentionItems[0].recommendedAction}
               </p>
@@ -301,8 +312,8 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
                 <TrendingUp className="w-3 h-3" />
                 PRIMARY PERFORMANCE DRIVER
               </span>
-              <h4 className="text-xs font-bold text-white">{execData.performanceDrivers[0].driver}</h4>
-              <p className="text-[11px] text-[#94A3B8]">
+              <h4 className={`text-xs font-bold ${textPrimary}`}>{execData.performanceDrivers[0].driver}</h4>
+              <p className={`text-[11px] ${textMuted}`}>
                 {execData.performanceDrivers[0].interpretation}
               </p>
             </div>
@@ -320,8 +331,8 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
                   {execData.pipeline.opportunities[0].potentialValue}
                 </span>
               </div>
-              <h4 className="text-xs font-bold text-white">{execData.pipeline.opportunities[0].name}</h4>
-              <p className="text-[11px] text-[#94A3B8]">
+              <h4 className={`text-xs font-bold ${textPrimary}`}>{execData.pipeline.opportunities[0].name}</h4>
+              <p className={`text-[11px] ${textMuted}`}>
                 <strong className="text-[#0E7C7B]">Strategic Action: </strong>
                 {execData.pipeline.opportunities[0].ceoAction}
               </p>
@@ -330,11 +341,15 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
 
           {/* Recommended Strategic Focus */}
           {execData?.recommendedFocus && (
-            <div className="p-3.5 rounded-xl bg-[#172033] border border-[#C9A227]/40 space-y-1">
+            <div className={`p-3.5 rounded-xl border border-[#C9A227]/40 space-y-1 ${
+              isLight ? 'bg-amber-50/50' : 'bg-[#172033]'
+            }`}>
               <span className="text-[10px] font-extrabold text-[#C9A227] uppercase block">
                 RECOMMENDED STRATEGIC FOCUS
               </span>
-              <p className="text-[11px] text-slate-200 font-semibold leading-relaxed">
+              <p className={`text-[11px] font-semibold leading-relaxed ${
+                isLight ? 'text-slate-800' : 'text-slate-200'
+              }`}>
                 "{execData.recommendedFocus}"
               </p>
             </div>
@@ -350,8 +365,8 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
               <div key={idx} className={`p-3.5 rounded-xl border ${cardBg} space-y-2`}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-xs font-bold text-white">{proj.name}</h4>
-                    <span className="text-[10px] text-[#94A3B8]">{proj.location}</span>
+                    <h4 className={`text-xs font-bold ${textPrimary}`}>{proj.name}</h4>
+                    <span className={`text-[10px] ${textMuted}`}>{proj.location}</span>
                   </div>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${proj.status === 'ON TRACK'
                       ? 'bg-[#0E7C7B]/20 text-[#0E7C7B]'
@@ -363,10 +378,10 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
 
                 <div className="flex items-center justify-between text-[11px] font-bold">
                   <span className="text-[#C9A227]">{proj.value}</span>
-                  <span className="text-slate-300">{proj.progress}% Complete</span>
+                  <span className={isLight ? 'text-slate-700' : 'text-slate-300'}>{proj.progress}% Complete</span>
                 </div>
 
-                <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div className={`w-full h-1.5 rounded-full overflow-hidden ${isLight ? 'bg-slate-200' : 'bg-white/10'}`}>
                   <div
                     className="h-full bg-[#0E7C7B] rounded-full"
                     style={{ width: `${proj.progress}%` }}
@@ -375,7 +390,7 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
               </div>
             ))
           ) : (
-            <div className="p-4 text-center text-xs text-[#94A3B8]">
+            <div className={`p-4 text-center text-xs ${textMuted}`}>
               No active major projects flagged.
             </div>
           )}
