@@ -1,11 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Globe, Building2, TrendingUp, Compass, Flag } from 'lucide-react';
+import { MapPin, Globe } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
 export const GlobalViewPage: React.FC = () => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
+
+  const card = isLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-[#0E172E]/90 border-navy-700/60 shadow-xl';
+  const innerCard = isLight ? 'bg-slate-50 border-slate-200' : 'bg-[#0A1021] border-slate-800';
+  const textPrimary = isLight ? 'text-slate-900' : 'text-white';
+  const textSec = isLight ? 'text-slate-500' : 'text-slate-400';
+  const divider = isLight ? 'border-slate-200' : 'border-slate-800';
 
   const regions = [
     { country: 'India', status: 'Core HQ & Operations', revenue: '₹ 16,850 Cr', ventures: 'Realty, Energy, Infra, Bullion, Hospitality, Sports, Foundation', growth: '+18.2%' },
@@ -28,47 +34,45 @@ export const GlobalViewPage: React.FC = () => {
           <span className="text-[11px] font-outfit font-extrabold tracking-widest text-gold uppercase">
             GEOSPATIAL ASSET FOOTPRINT
           </span>
-          <h1 className={`text-2xl font-outfit font-extrabold tracking-tight uppercase ${isLight ? 'text-slate-900' : 'text-white'}`}>
+          <h1 className={`text-2xl font-outfit font-extrabold tracking-tight uppercase ${textPrimary}`}>
             GLOBAL OPERATIONS & REGIONAL VIEW
           </h1>
         </div>
-        <span className="text-xs text-slate-400">10 International Geographies • Active Operations</span>
+        <span className={`text-xs ${textSec}`}>10 International Geographies • Active Operations</span>
       </div>
 
       {/* Global Interactive Summary */}
-      <div className={`${
-        isLight ? 'bg-white border-slate-200 shadow-sm text-slate-800' : 'bg-[#0E172E]/90 border-navy-700/60 shadow-xl text-slate-100'
-      } border rounded-2xl p-6 relative overflow-hidden`}>
+      <div className={`${card} border rounded-2xl p-6 relative overflow-hidden`}>
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-2xl bg-gold/15 border border-gold/40 text-gold">
             <Globe className="w-8 h-8" />
           </div>
           <div>
             <span className="text-[10px] font-extrabold text-gold uppercase tracking-widest">GLOBAL EXPANSION COCKPIT</span>
-            <h2 className="text-lg font-outfit font-extrabold text-white uppercase">Operational Footprint Across 10 Countries</h2>
-            <p className="text-xs text-slate-400 mt-0.5">India • USA • UK • Singapore • Dubai • Australia • Japan • Indonesia • Malaysia • Mauritius</p>
+            <h2 className={`text-lg font-outfit font-extrabold uppercase ${textPrimary}`}>Operational Footprint Across 10 Countries</h2>
+            <p className={`text-xs mt-0.5 ${textSec}`}>India • USA • UK • Singapore • Dubai • Australia • Japan • Indonesia • Malaysia • Mauritius</p>
           </div>
         </div>
 
         {/* Region Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
           {regions.map((reg, idx) => (
-            <div key={idx} className="p-4 rounded-xl bg-[#0A1021] border border-slate-800 flex flex-col justify-between text-xs">
+            <div key={idx} className={`p-4 rounded-xl border flex flex-col justify-between text-xs ${innerCard}`}>
               <div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-gold" />
-                    <span className="font-extrabold text-white text-sm uppercase">{reg.country}</span>
+                    <span className={`font-extrabold text-sm uppercase ${textPrimary}`}>{reg.country}</span>
                   </div>
                   <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
                     {reg.growth}
                   </span>
                 </div>
-                <span className="text-[10px] text-teal-300 font-semibold block mt-1">{reg.status}</span>
-                <p className="text-[11px] text-slate-400 mt-2"><strong>Ventures:</strong> {reg.ventures}</p>
+                <span className="text-[10px] text-teal-400 font-semibold block mt-1">{reg.status}</span>
+                <p className={`text-[11px] mt-2 ${textSec}`}><strong className={textPrimary}>Ventures:</strong> {reg.ventures}</p>
               </div>
-              <div className="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-400">Regional Revenue:</span>
+              <div className={`mt-3 pt-2 border-t flex items-center justify-between text-xs ${divider}`}>
+                <span className={textSec}>Regional Revenue:</span>
                 <strong className="text-gold font-extrabold">{reg.revenue}</strong>
               </div>
             </div>

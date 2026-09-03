@@ -125,7 +125,7 @@ export const BusinessPortfolioPage: React.FC = () => {
               <th className="p-4 text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/40 text-xs">
+          <tbody className={`divide-y text-xs ${isLight ? 'divide-slate-100' : 'divide-slate-800/40'}`}>
             {filteredBusinesses.map((b) => (
               <tr
                 key={b.id}
