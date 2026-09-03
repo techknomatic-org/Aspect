@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { EcosystemBusiness } from '../../types';
 import { EcosystemWorldVisual } from './EcosystemWorldVisual';
 import { useTheme } from '../../context/ThemeContext';
@@ -27,44 +27,24 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
   onSelectBusiness,
 }) => {
   const [hoveredBusinessId, setHoveredBusinessId] = useState<string | null>(null);
-  const [orbitAngle, setOrbitAngle] = useState(0);
-  const animRef = useRef<number | null>(null);
   const { theme } = useTheme();
   const isLight = theme === 'light';
 
-  // Smooth continuous 60fps clockwise orbital revolution
-  useEffect(() => {
-    let lastTime = performance.now();
-    const animate = (time: number) => {
-      const delta = time - lastTime;
-      lastTime = time;
-      if (!hoveredBusinessId) {
-        setOrbitAngle((prev) => (prev + delta * 0.00025) % (2 * Math.PI));
-      }
-      animRef.current = requestAnimationFrame(animate);
-    };
-    animRef.current = requestAnimationFrame(animate);
-    return () => {
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-    };
-  }, [hoveredBusinessId]);
-
-  // Calculate dynamic (x, y) coordinates for business world at index 'idx' along the orbit
+  // Fixed static positions for the 9 business cards along the orbit ellipse
   const getDynamicPosition = (businessId: string) => {
     const idx = BUSINESS_ORDER.indexOf(businessId);
     const total = BUSINESS_ORDER.length > 0 ? BUSINESS_ORDER.length : 9;
     const itemIndex = idx >= 0 ? idx : 0;
 
-    // Start at -pi/2 (12 o'clock top) and advance clockwise with orbitAngle
+    // Start at -pi/2 (12 o'clock top) and space evenly clockwise in static positions
     const baseAngle = (itemIndex / total) * 2 * Math.PI - Math.PI / 2;
-    const currentAngle = baseAngle + orbitAngle;
 
-    // Expanded ellipse radii to fill the full available vertical and horizontal space
+    // Expanded ellipse radii to fit available horizontal and vertical space
     const rx = 450; // horizontal radius (px)
     const ry = 280; // vertical radius (px)
 
-    const x = Math.round(rx * Math.cos(currentAngle));
-    const y = Math.round(ry * Math.sin(currentAngle));
+    const x = Math.round(rx * Math.cos(baseAngle));
+    const y = Math.round(ry * Math.sin(baseAngle));
 
     return { x, y };
   };
