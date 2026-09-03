@@ -70,17 +70,15 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
   };
 
   return (
-    <div className={`${
-      isLight
+    <div className={`${isLight
         ? 'bg-[#EEF1F8] border-slate-300 shadow-sm text-[#1F2937]'
         : 'bg-[#0B1426] border-white/10 shadow-2xl text-slate-100'
-    } border rounded-2xl p-4 lg:p-5 flex flex-col justify-between relative overflow-hidden select-none h-full min-h-0`}>
+      } border rounded-2xl p-4 lg:p-5 flex flex-col justify-between relative overflow-hidden select-none h-full min-h-0`}>
       {/* Background Radial Glow */}
-      <div className={`absolute inset-0 pointer-events-none ${
-        isLight
+      <div className={`absolute inset-0 pointer-events-none ${isLight
           ? 'bg-[radial-gradient(circle_at_center,rgba(201,162,39,0.08)_0%,rgba(238,241,248,0)_70%)]'
           : 'bg-[radial-gradient(circle_at_center,rgba(230,28,64,0.15)_0%,rgba(11,20,38,0)_70%)]'
-      }`} />
+        }`} />
 
 
       {/* Main Centerpiece Canvas — Expanded to Fill Available Space */}
@@ -198,13 +196,11 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
               className="absolute cursor-pointer transition-transform duration-100 ease-linear flex flex-col items-center group"
             >
               {/* Pill Label Badge — Planet Icon oriented towards Earth */}
-              <div className={`flex items-center gap-2 ${
-                isLeftOfEarth ? 'flex-row-reverse' : 'flex-row'
-              } ${
-                isLight
+              <div className={`flex items-center gap-2 ${isLeftOfEarth ? 'flex-row-reverse' : 'flex-row'
+                } ${isLight
                   ? 'bg-white/95 border-[#C9A227]/40 text-[#1F2937]'
                   : 'bg-[#172033]/95 border-[#C9A227]/40 text-white'
-              } backdrop-blur-md border group-hover:border-[#C9A227] px-3.5 py-1.5 rounded-full shadow-xl shadow-black/70 transition-all`}>
+                } backdrop-blur-md border group-hover:border-[#C9A227] px-3.5 py-1.5 rounded-full shadow-xl shadow-black/70 transition-all`}>
                 <EcosystemWorldVisual
                   worldId={business.id}
                   image3dUrl={business.image3dUrl}

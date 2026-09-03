@@ -4,26 +4,23 @@ import {
   ArrowLeft,
   Building2,
   TrendingUp,
-  TrendingDown,
   ShieldAlert,
   CheckCircle2,
-  Target,
   AlertTriangle,
   Zap,
-  Award,
   Layers,
-  Briefcase,
-  FileText,
   Activity,
   ChevronRight,
   Sparkles,
-  Info
+  ShieldCheck,
+  BarChart3
 } from 'lucide-react';
 import { EcosystemBusiness } from '../types';
 import { ecosystemService } from '../services/ecosystemService';
 import { SparklineChart } from '../components/charts/SparklineChart';
+import { CEOActionModal } from '../components/modals/CEOActionModal';
 import { useTheme } from '../context/ThemeContext';
-import { BUSINESS_EXECUTIVE_DATA, BusinessExecutiveReview } from '../data/businessData';
+import { BUSINESS_EXECUTIVE_DATA, BusinessExecutiveReview, CEOAttentionDetail } from '../data/businessData';
 
 interface BusinessExecutivePageProps {
   businessId: string;
@@ -35,6 +32,12 @@ export const BusinessExecutivePage: React.FC<BusinessExecutivePageProps> = ({
   onBack,
 }) => {
   const [business, setBusiness] = useState<EcosystemBusiness | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'financials' | 'projects' | 'risks'>('overview');
+  
+  // CEO Action Modal State
+  const [selectedActionItem, setSelectedActionItem] = useState<CEOAttentionDetail | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { theme } = useTheme();
   const isLight = theme === 'light';
 
@@ -46,8 +49,10 @@ export const BusinessExecutivePage: React.FC<BusinessExecutivePageProps> = ({
   if (!business) {
     return (
       <div className="h-[calc(100vh-64px)] flex flex-col items-center justify-center text-slate-400">
-        <div className="w-8 h-8 border-4 border-[#C9A227] border-t-transparent rounded-full animate-spin mb-3" />
-        <span className="text-xs font-bold text-[#C9A227] uppercase tracking-wider">Loading Executive Workspace...</span>
+        <div className="w-8 h-8 border-3 border-[#C9A227] border-t-transparent rounded-full animate-spin mb-3" />
+        <span className="text-xs font-semibold text-[#C9A227] uppercase tracking-wider">
+          Loading Executive Cockpit...
+        </span>
       </div>
     );
   }
@@ -55,33 +60,55 @@ export const BusinessExecutivePage: React.FC<BusinessExecutivePageProps> = ({
   // Retrieve comprehensive CEO data for this business vertical
   const execData: BusinessExecutiveReview | undefined = BUSINESS_EXECUTIVE_DATA[business.id];
 
-  // Master Color System
-  const cardBg = isLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-[#172033] border-white/10 shadow-xl';
-  const innerCardBg = isLight ? 'bg-slate-50 border-slate-200' : 'bg-[#0B1426] border-white/10';
-  const textMuted = isLight ? 'text-[#6B7280]' : 'text-[#94A3B8]';
-  const textPrimary = isLight ? 'text-[#1F2937]' : 'text-white';
+  // Master Executive Design Tokens - Clean, Sophisticated Enterprise Dark Theme
+  const cardBg = isLight
+    ? 'bg-white border-slate-200 shadow-sm'
+    : 'bg-[#131C2E] border-slate-800/80 shadow-md';
+  
+  const innerCardBg = isLight
+    ? 'bg-slate-50 border-slate-200'
+    : 'bg-[#0B1426] border-slate-800/60';
+  
+  const textMuted = isLight ? 'text-slate-500' : 'text-[#94A3B8]';
+  const textPrimary = isLight ? 'text-slate-900' : 'text-white';
+
+  const openDirectiveModal = (item?: CEOAttentionDetail) => {
+    if (item) {
+      setSelectedActionItem(item);
+    } else {
+      setSelectedActionItem({
+        issue: execData?.ceoAttentionItems?.[0]?.issue || 'Environmental Regulatory Clearance Slip for Hyderabad Tech Tower',
+        severity: 'Critical',
+        financialImpact: execData?.ceoAttentionItems?.[0]?.financialImpact || '₹ 120 Cr capital lockup for 45 additional days',
+        businessImpact: execData?.ceoAttentionItems?.[0]?.businessImpact || 'Land acquisition and project milestone timeline slip.',
+        rootCause: execData?.ceoAttentionItems?.[0]?.rootCause || 'State Pollution Control Board environmental approval queue.',
+        recommendedAction: execData?.ceoAttentionItems?.[0]?.recommendedAction || 'Submit revised environmental impact assessment report.',
+      });
+    }
+    setIsModalOpen(true);
+  };
 
   const getStatusBadge = (status: EcosystemBusiness['status']) => {
     switch (status) {
       case 'Healthy':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#0E7C7B]/20 border border-[#0E7C7B]/40 text-[#0E7C7B] uppercase tracking-wider inline-flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0E7C7B] animate-pulse" />
-            HEALTHY
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#0E7C7B]/15 border border-[#0E7C7B]/40 text-[#0E7C7B] inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0E7C7B]" />
+            Healthy Performance
           </span>
         );
       case 'Warning':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#C9A227]/20 border border-[#C9A227]/40 text-[#C9A227] uppercase tracking-wider inline-flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C9A227] animate-pulse" />
-            ATTENTION
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#C9A227]/15 border border-[#C9A227]/40 text-[#C9A227] inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C9A227]" />
+            Attention Required
           </span>
         );
       case 'Critical':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#E61C40]/20 border border-[#E61C40]/40 text-[#E61C40] uppercase tracking-wider inline-flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#E61C40] animate-pulse" />
-            CRITICAL
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E61C40]/15 border border-[#E61C40]/40 text-[#E61C40] inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E61C40]" />
+            Critical Action Needed
           </span>
         );
     }
@@ -90,86 +117,135 @@ export const BusinessExecutivePage: React.FC<BusinessExecutivePageProps> = ({
   const getProjectStatusBadge = (status: string) => {
     switch (status) {
       case 'ON TRACK':
-        return <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-[#0E7C7B]/20 text-[#0E7C7B] border border-[#0E7C7B]/30">ON TRACK</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#0E7C7B]/15 text-[#0E7C7B] border border-[#0E7C7B]/30">
+            On Track
+          </span>
+        );
       case 'WATCH':
-        return <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-[#C9A227]/20 text-[#C9A227] border border-[#C9A227]/30">WATCH</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#C9A227]/15 text-[#C9A227] border border-[#C9A227]/30">
+            Watch
+          </span>
+        );
       case 'DELAYED':
       case 'AT RISK':
-        return <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-[#E61C40]/20 text-[#E61C40] border border-[#E61C40]/30">{status}</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#E61C40]/15 text-[#E61C40] border border-[#E61C40]/30">
+            {status}
+          </span>
+        );
       default:
-        return <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-[#4A6FA5]/20 text-[#4A6FA5] border border-[#4A6FA5]/30">{status}</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-700/30 text-slate-300 border border-slate-600/30">
+            {status}
+          </span>
+        );
     }
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.99 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.25 }}
-      className="h-[calc(100vh-64px)] overflow-hidden flex flex-col justify-between p-3 lg:p-4 max-w-[1700px] mx-auto select-none space-y-2.5"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+      className="min-h-[calc(100vh-64px)] flex flex-col justify-between p-4 lg:p-6 max-w-[1720px] mx-auto select-none space-y-4 font-sans"
     >
       {/* ------------------------------------------------------------- */}
-      {/* ROW 1: TOP NAVIGATION & BUSINESS HEADER */}
+      {/* TOP HEADER & TITLE AREA */}
       {/* ------------------------------------------------------------- */}
-      <div className="space-y-2 shrink-0">
-        {/* Top Back Navigation Bar */}
-        <div className="flex items-center justify-between">
-          <button
-            onClick={onBack}
-            className={`px-3 py-1.5 rounded-xl border text-[11px] font-extrabold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
-              isLight
-                ? 'bg-white border-slate-300 text-[#1F2937] hover:border-[#C9A227] hover:text-[#C9A227]'
-                : 'bg-[#172033] border-white/10 text-slate-100 hover:border-[#C9A227]/60 hover:text-[#C9A227]'
-            }`}
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>← Back to Group Universe</span>
-          </button>
+      <div className="space-y-3 shrink-0">
+        {/* Navigation & Tab Controls */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onBack}
+              className={`px-3 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer ${
+                isLight
+                  ? 'bg-white border-slate-300 text-slate-700 hover:border-slate-400'
+                  : 'bg-[#131C2E] border-slate-800 text-slate-200 hover:border-slate-700'
+              }`}
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>← Return to Group Universe</span>
+            </button>
+
+            <div className="hidden md:flex items-center gap-2">
+              <span className="text-xs font-mono text-slate-400">
+                Executive Cockpit • ASP-{business.id.toUpperCase()}
+              </span>
+              <span className="text-[11px] px-2 py-0.5 rounded bg-[#C9A227]/10 border border-[#C9A227]/30 text-[#C9A227] font-medium flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" /> Board Review Ready
+              </span>
+            </div>
+          </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-[#94A3B8] uppercase font-bold tracking-wider hidden sm:inline">
-              EXECUTIVE WORKSPACE • ASP-{business.id.toUpperCase()}
-            </span>
-            <span className="text-[9px] px-2 py-0.5 rounded bg-[#C9A227]/15 border border-[#C9A227]/40 text-[#C9A227] font-bold uppercase tracking-wider">
-              BOARD REVIEW READY
-            </span>
+            {/* View Tabs */}
+            <div className="flex items-center p-1 rounded-lg bg-[#0B1426] border border-slate-800">
+              {(['overview', 'financials', 'projects', 'risks'] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-3 py-1 rounded-md text-xs font-medium capitalize transition-all cursor-pointer ${
+                    activeTab === tab
+                      ? 'bg-[#C9A227] text-[#0B1426] font-semibold'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  {tab === 'projects' ? 'Capex Projects' : tab === 'risks' ? 'Risk Matrix' : tab}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => openDirectiveModal()}
+              className="px-3.5 py-1.5 rounded-lg bg-[#0E7C7B] hover:bg-[#0E7C7B]/90 text-white font-medium text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>CEO Directive</span>
+            </button>
           </div>
         </div>
 
-        {/* Business Header Card */}
-        <div className={`${cardBg} border rounded-xl p-3.5 lg:p-4 flex items-center justify-between gap-4 relative overflow-hidden h-[92px]`}>
+        {/* Business Title Banner Card */}
+        <div className={`${cardBg} rounded-xl p-4 flex items-center justify-between gap-4 border`}>
           <div className="flex items-center gap-4 min-w-0">
             {business.image3dUrl ? (
               <img
                 src={business.image3dUrl}
                 alt={business.name}
-                className="w-14 h-14 lg:w-16 lg:h-16 rounded-xl object-cover border-2 border-[#C9A227]/60 shadow-lg shrink-0"
+                className="w-14 h-14 rounded-lg object-cover border border-slate-700 shadow-sm shrink-0"
               />
             ) : (
-              <div className="w-14 h-14 rounded-xl bg-[#0B1426] border-2 border-[#C9A227]/40 text-[#C9A227] flex items-center justify-center shrink-0">
+              <div className="w-14 h-14 rounded-lg bg-[#0B1426] border border-slate-800 text-[#C9A227] flex items-center justify-center shrink-0">
                 <Building2 className="w-7 h-7" />
               </div>
             )}
             <div className="min-w-0">
               <div className="flex items-center gap-2.5">
-                <span className="text-[11px] font-extrabold text-[#C9A227] uppercase tracking-widest truncate">
+                <span className="text-xs font-semibold text-[#C9A227] uppercase tracking-wider truncate">
                   {business.category}
                 </span>
                 {getStatusBadge(business.status)}
               </div>
-              <h1 className={`text-2xl lg:text-3xl font-extrabold tracking-tight uppercase leading-none mt-0.5 truncate ${textPrimary}`}>
+              <h1 className={`text-2xl lg:text-3xl font-bold tracking-tight uppercase leading-tight mt-0.5 truncate ${textPrimary}`}>
                 {business.name}
               </h1>
-              <p className="text-[11px] text-[#94A3B8] font-medium truncate mt-0.5">
-                {business.tagline || 'Purity • LBMA Integrity • Vault Storage'}
+              <p className="text-xs text-slate-400 font-normal truncate mt-0.5">
+                {business.tagline || 'Architectural Distinction • IGBC Platinum • Urban Spaces'}
               </p>
             </div>
           </div>
 
-          <div className={`p-3 rounded-xl border text-right shrink-0 min-w-[200px] ${innerCardBg} shadow-inner`}>
-            <span className="text-[9px] text-[#94A3B8] uppercase font-extrabold block tracking-wider">PORTFOLIO CONTRIBUTION</span>
-            <span className="text-xl lg:text-2xl font-extrabold text-[#0E7C7B] block mt-0.5 tracking-tight">{business.revenue}</span>
-            <span className="text-[10px] font-bold text-[#0E7C7B] inline-flex items-center gap-1">
+          <div className={`p-3 rounded-lg border text-right min-w-[200px] ${innerCardBg}`}>
+            <span className="text-[11px] text-slate-400 uppercase font-semibold block tracking-wider">
+              Portfolio Contribution
+            </span>
+            <span className="text-2xl font-bold text-[#0E7C7B] block mt-0.5">
+              {business.revenue}
+            </span>
+            <span className="text-xs font-semibold text-[#0E7C7B] inline-flex items-center gap-1 mt-0.5">
               <TrendingUp className="w-3 h-3" /> ▲ {business.growth} YoY
             </span>
           </div>
@@ -177,298 +253,476 @@ export const BusinessExecutivePage: React.FC<BusinessExecutivePageProps> = ({
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* ROW 2: 6 PRIMARY CEO KPI STRIP (Clean Alignments & Sparklines) */}
+      {/* STEP 1: PERFORMANCE SUMMARY (6 HORIZONTAL KPI CARDS) */}
       {/* ------------------------------------------------------------- */}
-      <div className="shrink-0">
-        <div className="flex items-center justify-between mb-1.5">
-          <h2 className="text-[10px] font-extrabold text-[#C9A227] uppercase tracking-widest flex items-center gap-1.5">
-            <Activity className="w-3 h-3" />
-            PRIMARY CEO KEY PERFORMANCE INDICATORS
+      <div className="shrink-0 space-y-2">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+            <Activity className="w-3.5 h-3.5 text-[#C9A227]" />
+            Primary CEO Key Performance Indicators
           </h2>
-          <span className="text-[9px] text-[#94A3B8] font-bold">REAL-TIME TELEMETRY</span>
+          <span className="text-[11px] text-slate-400 font-medium">Real-Time Benchmarks</span>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
-          {/* KPI 1: Revenue */}
-          <div className={`${cardBg} border rounded-xl p-3 flex items-center justify-between h-[82px] hover:border-[#C9A227]/40 transition-all group overflow-hidden`}>
-            <div className="flex-1 min-w-0 pr-1.5 flex flex-col justify-between h-full">
-              <span className="text-[9px] font-extrabold text-[#94A3B8] uppercase tracking-wider block truncate">YTD REVENUE</span>
-              <span className={`text-base lg:text-lg font-extrabold ${textPrimary} tracking-tight block truncate`}>{business.revenue}</span>
-              <span className="text-[10px] font-bold text-[#0E7C7B] flex items-center gap-0.5 truncate">
-                <TrendingUp className="w-2.5 h-2.5 shrink-0" /> ▲ {business.growth}
-              </span>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          {/* KPI 1: YTD Revenue */}
+          <div className={`${cardBg} rounded-xl p-3.5 flex flex-col justify-between border h-[90px]`}>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block truncate">YTD Revenue</span>
+            <div className="flex items-baseline justify-between gap-1 mt-1">
+              <span className={`text-xl font-bold ${textPrimary} tracking-tight truncate`}>{business.revenue}</span>
             </div>
-            <div className="w-[65px] lg:w-[75px] h-[34px] flex items-end shrink-0">
-              <SparklineChart color="#0E7C7B" data={business.sparklineData || [{ val: 4200 }, { val: 4600 }, { val: 5100 }, { val: 5500 }, { val: 5820 }]} height={34} width={75} />
+            <div className="flex items-center justify-between mt-1">
+              <span className="text-xs font-medium text-[#0E7C7B] flex items-center gap-0.5">
+                <TrendingUp className="w-3 h-3" /> ▲ {business.growth}
+              </span>
+              <div className="w-[50px] h-[22px] flex items-end shrink-0">
+                <SparklineChart color="#0E7C7B" data={business.sparklineData || [{ val: 4200 }, { val: 4600 }, { val: 5100 }, { val: 5500 }, { val: 5820 }]} height={22} width={50} />
+              </div>
             </div>
           </div>
 
           {/* KPI 2: EBITDA Margin */}
-          <div className={`${cardBg} border rounded-xl p-3 flex items-center justify-between h-[82px] hover:border-[#C9A227]/40 transition-all group overflow-hidden`}>
-            <div className="flex-1 min-w-0 pr-1.5 flex flex-col justify-between h-full">
-              <span className="text-[9px] font-extrabold text-[#94A3B8] uppercase tracking-wider block truncate">EBITDA MARGIN</span>
-              <span className="text-base lg:text-lg font-extrabold text-[#0E7C7B] tracking-tight block truncate">{business.ebitdaMargin || '21.5%'}</span>
-              <span className="text-[10px] font-bold text-[#0E7C7B] flex items-center gap-0.5 truncate">
-                <TrendingUp className="w-2.5 h-2.5 shrink-0" /> ▲ 2.4pp YoY
-              </span>
+          <div className={`${cardBg} rounded-xl p-3.5 flex flex-col justify-between border h-[90px]`}>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block truncate">EBITDA Margin</span>
+            <div className="flex items-baseline justify-between gap-1 mt-1">
+              <span className="text-xl font-bold text-[#0E7C7B] tracking-tight truncate">{business.ebitdaMargin || '28.4%'}</span>
             </div>
-            <div className="w-[65px] lg:w-[75px] h-[34px] flex items-end shrink-0">
-              <SparklineChart color="#0E7C7B" data={[{ val: 14.2 }, { val: 16.0 }, { val: 18.4 }, { val: 20.1 }, { val: 21.5 }]} height={34} width={75} />
+            <div className="flex items-center justify-between mt-1">
+              <span className="text-xs font-medium text-[#0E7C7B] flex items-center gap-0.5">
+                <TrendingUp className="w-3 h-3" /> ▲ 2.4pp
+              </span>
+              <div className="w-[50px] h-[22px] flex items-end shrink-0">
+                <SparklineChart color="#0E7C7B" data={[{ val: 14.2 }, { val: 16.0 }, { val: 18.4 }, { val: 20.1 }, { val: 21.5 }]} height={22} width={50} />
+              </div>
             </div>
           </div>
 
-          {/* KPI 3: Portfolio Value */}
-          <div className={`${cardBg} border rounded-xl p-3 flex items-center justify-between h-[82px] hover:border-[#C9A227]/40 transition-all group overflow-hidden`}>
-            <div className="flex-1 min-w-0 pr-1.5 flex flex-col justify-between h-full">
-              <span className="text-[9px] font-extrabold text-[#94A3B8] uppercase tracking-wider block truncate">PORTFOLIO VALUE</span>
-              <span className="text-base lg:text-lg font-extrabold text-[#C9A227] tracking-tight block truncate">{business.portfolioValue || '₹ 5,200 Cr'}</span>
-              <span className="text-[10px] font-semibold text-[#94A3B8] truncate">vs LY ₹ 4.4k Cr</span>
+          {/* KPI 3: Portfolio NAV */}
+          <div className={`${cardBg} rounded-xl p-3.5 flex flex-col justify-between border h-[90px]`}>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block truncate">Portfolio Value</span>
+            <div className="flex items-baseline justify-between gap-1 mt-1">
+              <span className="text-xl font-bold text-[#C9A227] tracking-tight truncate">{business.portfolioValue || '₹ 16,800 Cr'}</span>
             </div>
-            <div className="w-[65px] lg:w-[75px] h-[34px] flex items-end shrink-0">
-              <SparklineChart color="#C9A227" data={[{ val: 11000 }, { val: 12400 }, { val: 13500 }, { val: 14100 }, { val: 14500 }]} height={34} width={75} />
+            <div className="flex items-center justify-between mt-1">
+              <span className="text-xs text-slate-400 font-normal truncate">vs LY ₹ 4.4k Cr</span>
+              <div className="w-[50px] h-[22px] flex items-end shrink-0">
+                <SparklineChart color="#C9A227" data={[{ val: 11000 }, { val: 12400 }, { val: 13500 }, { val: 14100 }, { val: 14500 }]} height={22} width={50} />
+              </div>
             </div>
           </div>
 
           {/* KPI 4: Pipeline Value */}
-          <div className={`${cardBg} border rounded-xl p-3 flex items-center justify-between h-[82px] hover:border-[#C9A227]/40 transition-all group overflow-hidden`}>
-            <div className="flex-1 min-w-0 pr-1.5 flex flex-col justify-between h-full">
-              <span className="text-[9px] font-extrabold text-[#94A3B8] uppercase tracking-wider block truncate">PIPELINE VALUE</span>
-              <span className="text-base lg:text-lg font-extrabold text-[#C9A227] tracking-tight block truncate">{business.pipelineValue || '₹ 2,800 Cr'}</span>
-              <span className="text-[10px] font-bold text-[#0E7C7B] flex items-center gap-0.5 truncate">
-                <TrendingUp className="w-2.5 h-2.5 shrink-0" /> ▲ 18.2%
-              </span>
+          <div className={`${cardBg} rounded-xl p-3.5 flex flex-col justify-between border h-[90px]`}>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block truncate">Pipeline Value</span>
+            <div className="flex items-baseline justify-between gap-1 mt-1">
+              <span className="text-xl font-bold text-[#C9A227] tracking-tight truncate">{business.pipelineValue || '₹ 2,800 Cr'}</span>
             </div>
-            <div className="w-[65px] lg:w-[75px] h-[34px] flex items-end shrink-0">
-              <SparklineChart color="#C9A227" data={[{ val: 2100 }, { val: 2350 }, { val: 2520 }, { val: 2680 }, { val: 2800 }]} height={34} width={75} />
+            <div className="flex items-center justify-between mt-1">
+              <span className="text-xs font-medium text-[#0E7C7B] flex items-center gap-0.5">
+                <TrendingUp className="w-3 h-3" /> ▲ 18.2%
+              </span>
+              <div className="w-[50px] h-[22px] flex items-end shrink-0">
+                <SparklineChart color="#C9A227" data={[{ val: 2100 }, { val: 2350 }, { val: 2520 }, { val: 2680 }, { val: 2800 }]} height={22} width={50} />
+              </div>
             </div>
           </div>
 
           {/* KPI 5: Primary Output */}
-          <div className={`${cardBg} border rounded-xl p-3 flex items-center justify-between h-[82px] hover:border-[#C9A227]/40 transition-all group overflow-hidden`}>
-            <div className="flex-1 min-w-0 pr-1.5 flex flex-col justify-between h-full">
-              <span className="text-[9px] font-extrabold text-[#94A3B8] uppercase tracking-wider block truncate">{business.keyMetricLabel}</span>
-              <span className="text-base lg:text-lg font-extrabold text-[#0E7C7B] tracking-tight block truncate">{business.keyMetricValue}</span>
-              <span className="text-[10px] font-semibold text-[#94A3B8] truncate">Primary Output</span>
+          <div className={`${cardBg} rounded-xl p-3.5 flex flex-col justify-between border h-[90px]`}>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block truncate">{business.keyMetricLabel}</span>
+            <div className="flex items-baseline justify-between gap-1 mt-1">
+              <span className="text-xl font-bold text-[#0E7C7B] tracking-tight truncate">{business.keyMetricValue}</span>
             </div>
-            <div className="w-[65px] lg:w-[75px] h-[34px] flex items-end shrink-0">
-              <SparklineChart color="#0E7C7B" data={[{ val: 380 }, { val: 415 }, { val: 440 }, { val: 465 }, { val: 480 }]} height={34} width={75} />
+            <div className="flex items-center justify-between mt-1">
+              <span className="text-xs text-slate-400 font-normal truncate">Primary Output</span>
+              <div className="w-[50px] h-[22px] flex items-end shrink-0">
+                <SparklineChart color="#0E7C7B" data={[{ val: 380 }, { val: 415 }, { val: 440 }, { val: 465 }, { val: 480 }]} height={22} width={50} />
+              </div>
             </div>
           </div>
 
-          {/* KPI 6: Active Units */}
-          <div className={`${cardBg} border rounded-xl p-3 flex items-center justify-between h-[82px] hover:border-[#C9A227]/40 transition-all group overflow-hidden`}>
-            <div className="flex-1 min-w-0 pr-1.5 flex flex-col justify-between h-full">
-              <span className="text-[9px] font-extrabold text-[#94A3B8] uppercase tracking-wider block truncate">DIVISIONS / UNITS</span>
-              <span className={`text-base lg:text-lg font-extrabold ${textPrimary} tracking-tight block truncate`}>{business.businessesCount} Units</span>
-              <span className="text-[10px] font-bold text-[#0E7C7B] truncate">100% Operational</span>
+          {/* KPI 6: Units / Divisions */}
+          <div className={`${cardBg} rounded-xl p-3.5 flex flex-col justify-between border h-[90px]`}>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block truncate">Divisions / Units</span>
+            <div className="flex items-baseline justify-between gap-1 mt-1">
+              <span className={`text-xl font-bold ${textPrimary} tracking-tight truncate`}>{business.businessesCount} Units</span>
             </div>
-            <div className="w-[65px] lg:w-[75px] h-[34px] flex items-end shrink-0">
-              <SparklineChart color="#4A6FA5" data={[{ val: 3 }, { val: 4 }, { val: 4 }, { val: 5 }, { val: 5 }]} height={34} width={75} />
+            <div className="flex items-center justify-between mt-1">
+              <span className="text-xs font-medium text-[#0E7C7B]">100% Operational</span>
+              <div className="w-[50px] h-[22px] flex items-end shrink-0">
+                <SparklineChart color="#4A6FA5" data={[{ val: 3 }, { val: 4 }, { val: 4 }, { val: 5 }, { val: 5 }]} height={22} width={50} />
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* ROW 3: EXECUTIVE PERFORMANCE & PERFORMANCE DRIVERS (Split 6/6) */}
+      {/* TAB SWITCHED VIEWS */}
       {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-0">
-        {/* Left 6 cols: Executive Performance Comparative */}
-        <div className={`lg:col-span-6 p-3.5 rounded-xl border ${cardBg} flex flex-col justify-between h-full min-h-0`}>
-          <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
-            <h3 className="text-[10px] font-extrabold text-[#C9A227] uppercase tracking-widest flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5" />
-              EXECUTIVE PERFORMANCE TELEMETRY
-            </h3>
-            <span className="text-[9px] text-[#94A3B8] font-bold">QUARTERLY TELEMETRY</span>
-          </div>
+      <div className="flex-1 min-h-0">
+        {activeTab === 'overview' && (
+          <div className="space-y-4">
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 2: PERFORMANCE TELEMETRY & PERFORMANCE DRIVERS (Split 6/6) */}
+            {/* ------------------------------------------------------------- */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+              {/* Left 6 cols: Executive Performance Telemetry */}
+              <div className={`lg:col-span-6 p-4 rounded-xl border ${cardBg} flex flex-col justify-between`}>
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <h3 className="text-xs font-semibold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-[#C9A227]" />
+                    Executive Performance Telemetry
+                  </h3>
+                  <span className="text-xs text-slate-400 font-medium">Quarterly Telemetry</span>
+                </div>
 
-          <div className="grid grid-cols-3 gap-2.5 my-auto py-1">
-            {/* Revenue Trend */}
-            <div className={`p-2.5 rounded-lg border ${innerCardBg} flex flex-col justify-between h-[125px]`}>
-              <div>
-                <span className="text-[9px] font-extrabold text-white block uppercase tracking-wider">REVENUE</span>
-                <span className="text-[10px] text-[#0E7C7B] font-bold block mt-0.5">▲ {business.growth}</span>
-                <p className="text-[9px] text-[#94A3B8] italic mt-0.5 line-clamp-2 leading-tight">
-                  "{execData?.chartAnnotations?.revenue || 'Revenue accelerated for 3rd period.'}"
-                </p>
-              </div>
-              <SparklineChart data={business.sparklineData || [{ val: 4200 }, { val: 4800 }, { val: 5820 }]} color="#0E7C7B" height={32} />
-            </div>
-
-            {/* Profitability / EBITDA */}
-            <div className={`p-2.5 rounded-lg border ${innerCardBg} flex flex-col justify-between h-[125px]`}>
-              <div>
-                <span className="text-[9px] font-extrabold text-white block uppercase tracking-wider">PROFITABILITY</span>
-                <span className="text-[10px] text-[#0E7C7B] font-bold block mt-0.5">Margin {business.ebitdaMargin || '21.5%'}</span>
-                <p className="text-[9px] text-[#94A3B8] italic mt-0.5 line-clamp-2 leading-tight">
-                  "{execData?.chartAnnotations?.margin || 'Margin expanded by 2.4pp.'}"
-                </p>
-              </div>
-              <SparklineChart data={[{ val: 18.2 }, { val: 20.0 }, { val: 21.5 }]} color="#C9A227" height={32} />
-            </div>
-
-            {/* Group Contribution */}
-            <div className={`p-2.5 rounded-lg border ${innerCardBg} flex flex-col justify-between h-[125px]`}>
-              <div>
-                <span className="text-[9px] font-extrabold text-white block uppercase tracking-wider">CONTRIBUTION</span>
-                <span className="text-[10px] text-[#C9A227] font-bold block mt-0.5">Share 23.4%</span>
-                <p className="text-[9px] text-[#94A3B8] italic mt-0.5 line-clamp-2 leading-tight">
-                  "{execData?.chartAnnotations?.contribution || 'Major contributor to Group growth.'}"
-                </p>
-              </div>
-              <SparklineChart data={[{ val: 21.0 }, { val: 22.4 }, { val: 23.4 }]} color="#4A6FA5" height={32} />
-            </div>
-          </div>
-        </div>
-
-        {/* Right 6 cols: What is Driving Performance? */}
-        <div className={`lg:col-span-6 p-3.5 rounded-xl border ${cardBg} flex flex-col justify-between h-full min-h-0`}>
-          <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
-            <h3 className="text-[10px] font-extrabold text-[#C9A227] uppercase tracking-widest flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-[#C9A227]" />
-              WHAT IS DRIVING PERFORMANCE?
-            </h3>
-            <span className="text-[9px] text-[#94A3B8] font-bold">4 KEY DRIVERS</span>
-          </div>
-
-          <div className="space-y-1.5 my-auto py-1">
-            {(execData?.performanceDrivers || [
-              { driver: 'Pre-sales Growth & Demand', impactType: 'positive', relevantKpi: '▲ 21.5% YoY', interpretation: 'Pre-sales volume increased due to urban corridor expansion.' },
-              { driver: 'Improved Margin Realization', impactType: 'positive', relevantKpi: '+2.4pp', interpretation: 'Project cost optimization and premium pricing increased margin.' },
-              { driver: 'Commercial Leasing Expansion', impactType: 'positive', relevantKpi: '90% Leased', interpretation: 'Key anchor tenants signed for flagship commercial developments.' },
-              { driver: 'Regulatory Approval Timelines', impactType: 'negative', relevantKpi: 'Pending 2', interpretation: 'Pending clearance for Phase II requires state liaison focus.' },
-            ]).slice(0, 4).map((drv, i) => (
-              <div key={i} className={`p-2 rounded-lg border ${innerCardBg} flex items-center justify-between gap-2.5`}>
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className={`p-1 rounded shrink-0 ${
-                    drv.impactType === 'positive' ? 'bg-[#0E7C7B]/20 text-[#0E7C7B]' : 'bg-[#E61C40]/20 text-[#E61C40]'
-                  }`}>
-                    {drv.impactType === 'positive' ? <TrendingUp className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
+                <div className="grid grid-cols-3 gap-3 my-3">
+                  {/* Revenue */}
+                  <div className={`p-3 rounded-lg border ${innerCardBg} flex flex-col justify-between h-[135px]`}>
+                    <div>
+                      <span className="text-xs font-semibold text-slate-200 block">Revenue</span>
+                      <span className="text-xs text-[#0E7C7B] font-semibold block mt-0.5">▲ {business.growth}</span>
+                      <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                        "{execData?.chartAnnotations?.revenue || 'Quarterly revenue surpassed ₹ 1,100 Cr for the first time.'}"
+                      </p>
+                    </div>
+                    <div className="mt-2">
+                      <SparklineChart data={business.sparklineData || [{ val: 4200 }, { val: 4800 }, { val: 5820 }]} color="#0E7C7B" height={32} />
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-bold text-white uppercase block truncate">{drv.driver}</span>
-                    <span className="text-[9px] text-[#94A3B8] block truncate leading-none mt-0.5">{drv.interpretation}</span>
+
+                  {/* Profitability */}
+                  <div className={`p-3 rounded-lg border ${innerCardBg} flex flex-col justify-between h-[135px]`}>
+                    <div>
+                      <span className="text-xs font-semibold text-slate-200 block">Profitability</span>
+                      <span className="text-xs text-[#0E7C7B] font-semibold block mt-0.5">Margin {business.ebitdaMargin || '28.4%'}</span>
+                      <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                        "{execData?.chartAnnotations?.margin || 'EBITDA margin reached 28.4% due to premium commercial rentals.'}"
+                      </p>
+                    </div>
+                    <div className="mt-2">
+                      <SparklineChart data={[{ val: 18.2 }, { val: 20.0 }, { val: 21.5 }]} color="#C9A227" height={32} />
+                    </div>
+                  </div>
+
+                  {/* Contribution */}
+                  <div className={`p-3 rounded-lg border ${innerCardBg} flex flex-col justify-between h-[135px]`}>
+                    <div>
+                      <span className="text-xs font-semibold text-slate-200 block">Contribution</span>
+                      <span className="text-xs text-[#C9A227] font-semibold block mt-0.5">Share 23.4%</span>
+                      <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                        "{execData?.chartAnnotations?.contribution || 'Realty contributes 15.6% of overall Group YTD Revenue.'}"
+                      </p>
+                    </div>
+                    <div className="mt-2">
+                      <SparklineChart data={[{ val: 21.0 }, { val: 22.4 }, { val: 23.4 }]} color="#4A6FA5" height={32} />
+                    </div>
                   </div>
                 </div>
-                <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded shrink-0 ${
-                  drv.impactType === 'positive' ? 'bg-[#0E7C7B]/15 text-[#0E7C7B]' : 'bg-[#E61C40]/15 text-[#E61C40]'
-                }`}>
-                  {drv.relevantKpi}
-                </span>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
-      {/* ------------------------------------------------------------- */}
-      {/* ROW 4: CEO ATTENTION & MAJOR PROJECTS (Split 6/6) */}
-      {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-0">
-        {/* Left 6 cols: CEO Attention & Risk Exposure */}
-        <div className={`lg:col-span-6 p-3.5 rounded-xl border ${cardBg} flex flex-col justify-between h-full min-h-0`}>
-          <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
-            <h3 className="text-[10px] font-extrabold text-[#E61C40] uppercase tracking-widest flex items-center gap-1.5">
-              <ShieldAlert className="w-3.5 h-3.5 text-[#E61C40]" />
-              CEO ATTENTION & RISK EXPOSURE
-            </h3>
-            <span className="text-[9px] font-bold text-[#E61C40] px-2 py-0.5 rounded bg-[#E61C40]/15">LEADERSHIP ACTION</span>
-          </div>
+              {/* Right 6 cols: What is Driving Performance? */}
+              <div className={`lg:col-span-6 p-4 rounded-xl border ${cardBg} flex flex-col justify-between`}>
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <h3 className="text-xs font-semibold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-[#C9A227]" />
+                    What is Driving Performance?
+                  </h3>
+                  <span className="text-xs text-slate-400 font-medium">4 Key Drivers</span>
+                </div>
 
-          <div className="space-y-1.5 my-auto py-1">
-            {execData?.ceoAttentionItems && execData.ceoAttentionItems.length > 0 ? (
-              execData.ceoAttentionItems.slice(0, 2).map((item, idx) => (
-                <div key={idx} className={`p-2.5 rounded-lg border ${innerCardBg} border-l-4 border-l-[#E61C40] space-y-1`}>
+                <div className="space-y-2.5 my-auto py-2">
+                  {(execData?.performanceDrivers || [
+                    { driver: 'Pre-leasing 90% Commercial Skyscrapers', impactType: 'positive', relevantKpi: 'Revenue & Margin', interpretation: 'Multinational banking tenants locked in 12-year lease commitments.' },
+                    { driver: 'IGBC Platinum Sustainability Premium', impactType: 'positive', relevantKpi: 'Project Value', interpretation: 'Green certified towers command 18% rental rate premium over market.' },
+                    { driver: 'Retail Mall Footfall Growth', impactType: 'positive', relevantKpi: 'Yield +14%', interpretation: 'Weekend footfalls increased by 22% quarter-over-quarter.' },
+                    { driver: 'Phase II Regulatory Approval Timeline', impactType: 'negative', relevantKpi: 'Pending SLA', interpretation: 'State Pollution Control Board clearance pending for Hyderabad site.' },
+                  ]).slice(0, 4).map((drv, i) => (
+                    <div key={i} className={`p-2.5 rounded-lg border ${innerCardBg} flex items-center justify-between gap-3`}>
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className={`p-1.5 rounded shrink-0 ${
+                          drv.impactType === 'positive' ? 'bg-[#0E7C7B]/15 text-[#0E7C7B]' : 'bg-[#E61C40]/15 text-[#E61C40]'
+                        }`}>
+                          {drv.impactType === 'positive' ? <TrendingUp className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
+                        </div>
+                        <div className="min-w-0">
+                          <span className="text-xs font-semibold text-slate-100 block truncate">{drv.driver}</span>
+                          <span className="text-[11px] text-slate-400 block truncate mt-0.5">{drv.interpretation}</span>
+                        </div>
+                      </div>
+                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded shrink-0 ${
+                        drv.impactType === 'positive' ? 'bg-[#0E7C7B]/15 text-[#0E7C7B]' : 'bg-[#E61C40]/15 text-[#E61C40]'
+                      }`}>
+                        {drv.relevantKpi}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 3 & 4: RISKS & CAPEX PROJECTS (Split 6/6) */}
+            {/* ------------------------------------------------------------- */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+              {/* Left 6 cols: CEO Attention & Capital Risks */}
+              <div className={`lg:col-span-6 p-4 rounded-xl border ${cardBg} flex flex-col justify-between`}>
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <h3 className="text-xs font-semibold text-[#E61C40] uppercase tracking-wider flex items-center gap-2">
+                    <ShieldAlert className="w-4 h-4 text-[#E61C40]" />
+                    CEO Attention & Risk Exposure
+                  </h3>
+                  <span className="text-[11px] font-semibold text-[#E61C40] px-2 py-0.5 rounded bg-[#E61C40]/15 border border-[#E61C40]/30">
+                    Leadership Action Needed
+                  </span>
+                </div>
+
+                <div className="space-y-3 my-auto py-2">
+                  {execData?.ceoAttentionItems && execData.ceoAttentionItems.length > 0 ? (
+                    execData.ceoAttentionItems.slice(0, 2).map((item, idx) => (
+                      <div
+                        key={idx}
+                        className={`p-3 rounded-lg border ${innerCardBg} border-l-4 border-l-[#E61C40] flex flex-col sm:flex-row sm:items-center justify-between gap-3`}
+                      >
+                        <div className="space-y-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <AlertTriangle className="w-4 h-4 text-[#E61C40] shrink-0" />
+                            <span className="text-xs font-bold text-slate-100 uppercase truncate">
+                              {item.issue}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-300">
+                            <strong className="text-[#C9A227]">Action Required: </strong>{item.recommendedAction}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                          <span className="text-[11px] font-semibold px-2 py-1 rounded bg-[#E61C40]/15 text-[#E61C40]">
+                            {item.financialImpact}
+                          </span>
+                          <button
+                            onClick={() => openDirectiveModal(item)}
+                            className="px-3 py-1 rounded bg-[#E61C40] hover:bg-[#E61C40]/90 text-white font-semibold text-xs transition-colors cursor-pointer flex items-center gap-1 shadow-sm"
+                          >
+                            <span>Authorize &gt;</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className={`p-4 rounded-lg border ${innerCardBg} flex items-center gap-3`}>
+                      <CheckCircle2 className="w-5 h-5 text-[#0E7C7B] shrink-0" />
+                      <div>
+                        <h4 className="text-xs font-semibold text-slate-200">No Critical Risk Alerts</h4>
+                        <p className="text-[11px] text-slate-400">All business units are executing within normal baseline parameters.</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Right 6 cols: Major Strategic Projects (CAPEX) */}
+              <div className={`lg:col-span-6 p-4 rounded-xl border ${cardBg} flex flex-col justify-between`}>
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <h3 className="text-xs font-semibold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                    <Layers className="w-4 h-4 text-[#C9A227]" />
+                    Major Strategic Projects
+                  </h3>
+                  <span className="text-xs text-slate-400 font-medium">Top Projects</span>
+                </div>
+
+                <div className="space-y-2.5 my-auto py-2">
+                  {(execData?.majorProjects || [
+                    { name: 'Aspect Tech Skyline Tower', location: 'Hyderabad, Telangana', value: '₹ 1,200 Cr', progress: 82, status: 'ON TRACK', completionDate: 'Q4 FY26' },
+                    { name: 'Financial Center Phase II', location: 'Mumbai, Maharashtra', value: '₹ 1,050 Cr', progress: 64, status: 'WATCH', completionDate: 'Q2 FY27' },
+                    { name: 'Sanctuary Coastal Resort', location: 'Goa Coast', value: '₹ 820 Cr', progress: 45, status: 'ON TRACK', completionDate: 'Q4 FY27' },
+                  ]).slice(0, 3).map((proj, idx) => (
+                    <div key={idx} className={`p-2.5 rounded-lg border ${innerCardBg} flex items-center justify-between gap-4`}>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-semibold text-slate-100 uppercase truncate">{proj.name}</span>
+                          {getProjectStatusBadge(proj.status)}
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] text-slate-400 mt-1">
+                          <span>{proj.location} • <strong className="text-[#C9A227]">{proj.value}</strong></span>
+                          <span>Target: {proj.completionDate}</span>
+                        </div>
+                      </div>
+
+                      {/* Clean Linear Progress Bar */}
+                      <div className="w-24 shrink-0 text-right">
+                        <span className="text-xs font-bold text-slate-200 block mb-1">{proj.progress}%</span>
+                        <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full ${proj.status === 'ON TRACK' ? 'bg-[#0E7C7B]' : 'bg-[#C9A227]'}`}
+                            style={{ width: `${proj.progress}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* FINANCIALS TAB CONTENT */}
+        {activeTab === 'financials' && (
+          <div className={`p-5 rounded-xl border ${cardBg} space-y-4`}>
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-sm font-semibold text-[#C9A227] uppercase tracking-wider flex items-center gap-2">
+                <BarChart3 className="w-4 h-4" /> Financial Telemetry & Capital Return Analysis
+              </h3>
+              <span className="text-xs text-slate-400">Audited Q3 Telemetry</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div className={`p-4 rounded-lg border ${innerCardBg}`}>
+                <span className="text-xs text-slate-400 font-medium block">ROCE (Return on Capital)</span>
+                <span className="text-2xl font-bold text-[#0E7C7B] block mt-1">18.4%</span>
+                <span className="text-xs text-slate-400 block mt-1">+1.8pp over WACC</span>
+              </div>
+              <div className={`p-4 rounded-lg border ${innerCardBg}`}>
+                <span className="text-xs text-slate-400 font-medium block">Free Cash Flow (FCF)</span>
+                <span className="text-2xl font-bold text-white block mt-1">₹ 840 Cr</span>
+                <span className="text-xs text-[#0E7C7B] block mt-1">▲ 22.1% YoY</span>
+              </div>
+              <div className={`p-4 rounded-lg border ${innerCardBg}`}>
+                <span className="text-xs text-slate-400 font-medium block">Capex Deployment Rate</span>
+                <span className="text-2xl font-bold text-[#C9A227] block mt-1">86.2%</span>
+                <span className="text-xs text-slate-400 block mt-1">On plan for FY26</span>
+              </div>
+              <div className={`p-4 rounded-lg border ${innerCardBg}`}>
+                <span className="text-xs text-slate-400 font-medium block">Net Debt / EBITDA</span>
+                <span className="text-2xl font-bold text-[#0E7C7B] block mt-1">1.1x</span>
+                <span className="text-xs text-slate-400 block mt-1">Conservative gearing</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* PROJECTS TAB CONTENT */}
+        {activeTab === 'projects' && (
+          <div className={`p-5 rounded-xl border ${cardBg} space-y-3`}>
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-sm font-semibold text-[#C9A227] uppercase tracking-wider flex items-center gap-2">
+                <Layers className="w-4 h-4" /> Strategic Capex Projects Register
+              </h3>
+              <span className="text-xs text-slate-400">Active Capital Investments</span>
+            </div>
+
+            <div className="space-y-3">
+              {(execData?.majorProjects || [
+                { name: 'Aspect Tech Skyline Tower', location: 'Hyderabad, Telangana', value: '₹ 1,200 Cr', progress: 82, status: 'ON TRACK', completionDate: 'Q4 FY26' },
+                { name: 'Financial Center Phase II', location: 'Mumbai, Maharashtra', value: '₹ 1,050 Cr', progress: 64, status: 'WATCH', completionDate: 'Q2 FY27' },
+                { name: 'Sanctuary Coastal Resort', location: 'Goa Coast', value: '₹ 820 Cr', progress: 45, status: 'ON TRACK', completionDate: 'Q4 FY27' },
+              ]).map((proj, idx) => (
+                <div key={idx} className={`p-4 rounded-lg border ${innerCardBg} flex items-center justify-between gap-4`}>
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-slate-100 uppercase">{proj.name}</span>
+                      {getProjectStatusBadge(proj.status)}
+                    </div>
+                    <p className="text-xs text-slate-400">
+                      Location: <strong className="text-slate-200">{proj.location}</strong> • Financial Outlay: <strong className="text-[#C9A227]">{proj.value}</strong> • Completion Target: <strong className="text-slate-200">{proj.completionDate}</strong>
+                    </p>
+                  </div>
+
+                  <div className="w-32 shrink-0 text-right">
+                    <span className="text-xs font-bold text-slate-200 block mb-1">{proj.progress}%</span>
+                    <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${proj.status === 'ON TRACK' ? 'bg-[#0E7C7B]' : 'bg-[#C9A227]'}`}
+                        style={{ width: `${proj.progress}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* RISKS TAB CONTENT */}
+        {activeTab === 'risks' && (
+          <div className={`p-5 rounded-xl border ${cardBg} space-y-3`}>
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-sm font-semibold text-[#E61C40] uppercase tracking-wider flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-[#E61C40]" /> Enterprise Risk & Exposure Register
+              </h3>
+              <span className="text-xs text-slate-400">Active Exposure Analysis</span>
+            </div>
+
+            <div className="space-y-3">
+              {(execData?.risksAndExposure || [
+                {
+                  risk: 'State Environmental License Delay for Hyderabad Tech Tower',
+                  severity: 'High',
+                  exposure: '₹ 120 Cr Locked',
+                  impact: 'Construction milestone timeline slip of 45 days.',
+                  probability: 'High (70%)',
+                  mitigation: 'Engage Senior Liaison Officer to submit expedited EIA assessment.'
+                }
+              ]).map((riskItem, idx) => (
+                <div key={idx} className={`p-4 rounded-lg border ${innerCardBg} border-l-4 border-l-[#E61C40] space-y-2`}>
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-extrabold text-white uppercase flex items-center gap-1.5 truncate">
-                      <AlertTriangle className="w-3 h-3 text-[#E61C40] shrink-0" />
-                      {item.issue}
+                    <span className="text-xs font-semibold text-slate-100 uppercase flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-[#E61C40]" /> {riskItem.risk}
                     </span>
-                    <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#E61C40]/20 text-[#E61C40]">
-                      {item.financialImpact}
+                    <span className="text-xs font-semibold px-2.5 py-0.5 rounded bg-[#E61C40]/15 text-[#E61C40]">
+                      {riskItem.exposure}
                     </span>
                   </div>
-                  <p className="text-[9px] text-slate-300 truncate">
-                    <strong className="text-[#C9A227]">Action: </strong>{item.recommendedAction}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <div className={`p-3 rounded-lg border ${innerCardBg} flex items-center gap-3`}>
-                <CheckCircle2 className="w-5 h-5 text-[#0E7C7B] shrink-0" />
-                <div>
-                  <h4 className="text-[10px] font-extrabold text-white uppercase">NO CRITICAL ISSUES</h4>
-                  <p className="text-[9px] text-[#94A3B8]">No immediate leadership intervention required for this vertical.</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right 6 cols: Major Strategic Projects */}
-        <div className={`lg:col-span-6 p-3.5 rounded-xl border ${cardBg} flex flex-col justify-between h-full min-h-0`}>
-          <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
-            <h3 className="text-[10px] font-extrabold text-[#C9A227] uppercase tracking-widest flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-[#C9A227]" />
-              MAJOR STRATEGIC PROJECTS
-            </h3>
-            <span className="text-[9px] text-[#C9A227] font-bold">TOP PROJECTS</span>
-          </div>
-
-          <div className="space-y-1.5 my-auto py-1">
-            {(execData?.majorProjects || [
-              { name: 'Aspect Financial Tower Phase I', location: 'BKC, Mumbai', value: '₹ 1,450 Cr', progress: 84, status: 'ON TRACK', completionDate: 'Q3 2026' },
-              { name: 'Sanctuary Luxury Eco-Resort', location: 'Goa Coast', value: '₹ 820 Cr', progress: 62, status: 'ON TRACK', completionDate: 'Q4 2026' },
-              { name: 'Renewable Solar Park Expansion', location: 'Rajasthan', value: '₹ 1,120 Cr', progress: 45, status: 'WATCH', completionDate: 'Q1 2027' },
-            ]).slice(0, 3).map((proj, idx) => (
-              <div key={idx} className={`p-2 rounded-lg border ${innerCardBg} flex items-center justify-between gap-3`}>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-white uppercase truncate">{proj.name}</span>
-                    {getProjectStatusBadge(proj.status)}
-                  </div>
-                  <div className="flex items-center justify-between text-[9px] text-[#94A3B8] mt-0.5">
-                    <span>{proj.location} • <strong className="text-[#C9A227]">{proj.value}</strong></span>
-                    <span>Target: {proj.completionDate}</span>
+                  <p className="text-xs text-slate-300">{riskItem.impact}</p>
+                  <div className="p-2 rounded bg-slate-900/60 text-xs text-slate-400">
+                    <strong className="text-[#C9A227]">Mitigation: </strong>{riskItem.mitigation}
                   </div>
                 </div>
-                <div className="w-20 shrink-0 text-right">
-                  <span className="text-[9px] font-bold text-slate-200 block mb-0.5">{proj.progress}%</span>
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full ${proj.status === 'ON TRACK' ? 'bg-[#0E7C7B]' : 'bg-[#C9A227]'}`} style={{ width: `${proj.progress}%` }} />
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* ROW 5: RECOMMENDED CEO FOCUS (Compact Conclusion Banner) */}
+      {/* STEP 5: ACTION REQUIRED (RECOMMENDED CEO FOCUS BANNER) */}
       {/* ------------------------------------------------------------- */}
-      <div className="bg-[#172033] border-2 border-[#C9A227] rounded-xl p-3 text-white shadow-xl flex items-center justify-between gap-4 shrink-0 h-[52px]">
+      <div className="bg-[#131C2E] border border-[#C9A227]/60 rounded-xl p-3.5 text-white shadow-lg flex items-center justify-between gap-4 shrink-0">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-7 h-7 rounded-lg bg-[#C9A227]/20 border border-[#C9A227]/50 text-[#C9A227] flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-[#C9A227]/15 border border-[#C9A227]/40 text-[#C9A227] flex items-center justify-center shrink-0">
             <Sparkles className="w-4 h-4" />
           </div>
           <div className="min-w-0">
-            <span className="text-[9px] font-extrabold text-[#C9A227] uppercase tracking-widest block leading-none">RECOMMENDED CEO FOCUS</span>
-            <p className="text-xs font-bold text-white truncate mt-0.5">
-              "{execData?.recommendedFocus || `Finalize land acquisition for Aspect Financial City Phase II and accelerate residential pre-leasing.`}"
+            <span className="text-[11px] font-semibold text-[#C9A227] uppercase tracking-wider block">
+              Recommended CEO Focus
+            </span>
+            <p className="text-xs text-slate-200 truncate mt-0.5">
+              "{execData?.recommendedFocus || `Sign land acquisition for Aspect Smart Financial City Phase II while clearing Pollution Control Board environmental approval for Hyderabad Tech Tower.`}"
             </p>
           </div>
         </div>
 
         <button
-          onClick={onBack}
-          className="px-4 py-1.5 rounded-lg bg-[#C9A227] text-[#0B1426] font-extrabold text-[11px] hover:brightness-110 transition-all shrink-0 cursor-pointer shadow flex items-center gap-1"
+          onClick={() => openDirectiveModal()}
+          className="px-4 py-1.5 rounded-lg bg-[#C9A227] hover:bg-[#C9A227]/90 text-[#0B1426] font-bold text-xs transition-colors shrink-0 cursor-pointer shadow flex items-center gap-1"
         >
-          <span>Return to Universe</span>
+          <span>Execute Action Directive</span>
           <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>
+
+      {/* CEO DIRECTIVE ACTION MODAL */}
+      <CEOActionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={selectedActionItem?.issue || 'Environmental Regulatory Approval Slip for Hyderabad Tech Tower'}
+        financialImpact={selectedActionItem?.financialImpact || '₹ 120 Cr capital lockup for 45 additional days'}
+        businessImpact={selectedActionItem?.businessImpact || 'Land acquisition and project milestone timeline slip.'}
+        recommendedAction={selectedActionItem?.recommendedAction || 'Submit revised environmental impact assessment report.'}
+        businessName={business.name}
+      />
     </motion.div>
   );
 };

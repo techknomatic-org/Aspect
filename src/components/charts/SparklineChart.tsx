@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { SparklinePoint } from '../../types';
 
 interface SparklineChartProps {
   data: SparklinePoint[];
-  color?: string; // e.g. '#8B5CF6' or '#19C39A' or '#E8A52B' or '#4EA1FF'
+  color?: string;
   fillGradient?: boolean;
   height?: number;
   width?: number;
@@ -16,6 +16,9 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({
   height = 50,
   width = 120,
 }) => {
+  const rawId = useId();
+  const gradientId = `spark-grad-${rawId.replace(/:/g, '')}`;
+
   if (!data || data.length < 2) return null;
 
   const min = Math.min(...data.map((d) => d.val));
@@ -29,7 +32,6 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({
     return { x, y };
   });
 
-  // Build smooth path
   const pathD = points.reduce((acc, point, i) => {
     if (i === 0) return `M ${point.x} ${point.y}`;
     const prev = points[i - 1];
@@ -38,22 +40,19 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({
   }, '');
 
   const areaD = `${pathD} L ${points[points.length - 1].x} ${height} L ${points[0].x} ${height} Z`;
-  const gradientId = `grad-${color.replace('#', '')}-${Math.random().toString(36).substring(2, 6)}`;
 
   return (
     <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible select-none">
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity={0.5} />
-          <stop offset="70%" stopColor={color} stopOpacity={0.15} />
+          <stop offset="0%" stopColor={color} stopOpacity={0.45} />
+          <stop offset="70%" stopColor={color} stopOpacity={0.12} />
           <stop offset="100%" stopColor={color} stopOpacity={0.0} />
         </linearGradient>
       </defs>
 
-      {/* Area Gradient Fill */}
       {fillGradient && <path d={areaD} fill={`url(#${gradientId})`} />}
 
-      {/* Crisp Curve Line */}
       <path
         d={pathD}
         fill="none"
@@ -63,7 +62,14 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({
         strokeLinejoin="round"
       />
 
-      {/* Endpoint Glowing Dot */}
+      <circle
+        cx={points[points.length - 1].x}
+        cy={points[points.length - 1].y}
+        r="4"
+        fill={color}
+        fillOpacity="0.3"
+        className="animate-ping"
+      />
       <circle
         cx={points[points.length - 1].x}
         cy={points[points.length - 1].y}
@@ -73,9 +79,10 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({
       <circle
         cx={points[points.length - 1].x}
         cy={points[points.length - 1].y}
-        r="1.5"
+        r="1.2"
         fill="#FFFFFF"
       />
     </svg>
   );
 };
+

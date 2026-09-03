@@ -130,9 +130,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 }`}
                 title={isCollapsed ? item.label : undefined}
               >
-                <Icon className={`w-5 h-5 shrink-0 ${isActive ? (isLight ? 'text-[#1F2937]' : 'text-[#C9A227]') : ''}`} />
+                <Icon className={`w-4.5 h-4.5 shrink-0 ${isActive ? (isLight ? 'text-slate-900' : 'text-[#C9A227]') : 'text-slate-400'}`} />
                 {!isCollapsed && (
-                  <span className="truncate tracking-wider uppercase font-semibold">
+                  <span className="truncate font-medium text-xs">
                     {item.label}
                   </span>
                 )}

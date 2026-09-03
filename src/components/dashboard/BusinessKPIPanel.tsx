@@ -147,20 +147,24 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
 
           <div className="flex items-center gap-2 shrink-0">
             <button
-              onClick={() => onOpenFullPage(business.id)}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#172033] border border-[#C9A227]/60 text-[#C9A227] text-xs font-bold hover:bg-[#C9A227]/10 transition-all duration-150 cursor-pointer shadow-sm"
-              title="Open full business review"
+              onClick={() => {
+                window.open('http://139.59.29.162:8089/', '_blank', 'noopener,noreferrer');
+                if (onOpenFullPage) {
+                  onOpenFullPage(business.id);
+                }
+              }}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#172033] border border-[#C9A227]/60 text-[#C9A227] text-xs font-bold hover:bg-[#C9A227]/15 transition-all duration-150 cursor-pointer shadow-sm group"
+              title="Navigate to Real Estate Management (http://139.59.29.162:8089/)"
             >
               Full Page
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
             <button
               onClick={onClose}
-              className={`p-1.5 rounded-lg border transition-all duration-150 cursor-pointer ${
-                isLight
+              className={`p-1.5 rounded-lg border transition-all duration-150 cursor-pointer ${isLight
                   ? 'bg-slate-200 border-slate-300 text-[#6B7280] hover:text-[#1F2937]'
                   : 'bg-[#172033] border-white/10 text-[#94A3B8] hover:text-white'
-              }`}
+                }`}
             >
               <X className="w-4 h-4" />
             </button>
@@ -181,31 +185,28 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
         <div className="flex items-center gap-1.5 mt-3 p-1 rounded-xl bg-[#0B1426] border border-white/10 text-xs font-bold">
           <button
             onClick={() => setActiveTab('kpi')}
-            className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${
-              activeTab === 'kpi'
+            className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${activeTab === 'kpi'
                 ? 'bg-[#172033] text-[#C9A227] shadow'
                 : 'text-[#94A3B8] hover:text-white'
-            }`}
+              }`}
           >
             📊 Key Metrics
           </button>
           <button
             onClick={() => setActiveTab('brief')}
-            className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${
-              activeTab === 'brief'
+            className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${activeTab === 'brief'
                 ? 'bg-[#172033] text-[#C9A227] shadow'
                 : 'text-[#94A3B8] hover:text-white'
-            }`}
+              }`}
           >
             🎯 Strategic Brief
           </button>
           <button
             onClick={() => setActiveTab('projects')}
-            className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${
-              activeTab === 'projects'
+            className={`flex-1 py-1.5 rounded-lg transition-all text-center cursor-pointer ${activeTab === 'projects'
                 ? 'bg-[#172033] text-[#C9A227] shadow'
                 : 'text-[#94A3B8] hover:text-white'
-            }`}
+              }`}
           >
             🚀 Projects
           </button>
@@ -241,9 +242,8 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
                   </div>
 
                   {kpi.change && (
-                    <div className={`text-xs font-bold flex items-center gap-1 ${
-                      isPositive ? 'text-[#0E7C7B]' : 'text-[#C1502E]'
-                    }`}>
+                    <div className={`text-xs font-bold flex items-center gap-1 ${isPositive ? 'text-[#0E7C7B]' : 'text-[#C1502E]'
+                      }`}>
                       {isPositive
                         ? <TrendingUp className="w-3 h-3 shrink-0" />
                         : <TrendingDown className="w-3 h-3 shrink-0" />
@@ -353,11 +353,10 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
                     <h4 className="text-xs font-bold text-white">{proj.name}</h4>
                     <span className="text-[10px] text-[#94A3B8]">{proj.location}</span>
                   </div>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    proj.status === 'ON TRACK'
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${proj.status === 'ON TRACK'
                       ? 'bg-[#0E7C7B]/20 text-[#0E7C7B]'
                       : 'bg-[#C1502E]/20 text-[#C1502E]'
-                  }`}>
+                    }`}>
                     {proj.status}
                   </span>
                 </div>
@@ -407,13 +406,12 @@ export const BusinessKPIPanel: React.FC<BusinessKPIPanelProps> = ({
           <span className={`text-[10px] font-bold uppercase tracking-wider ${textMuted} block mb-1`}>
             STATUS
           </span>
-          <span className={`inline-block text-xs font-extrabold px-3 py-0.5 rounded-full ${
-            business.status === 'Healthy'
+          <span className={`inline-block text-xs font-extrabold px-3 py-0.5 rounded-full ${business.status === 'Healthy'
               ? 'bg-[#0E7C7B]/20 text-[#0E7C7B] border border-[#0E7C7B]/40'
               : business.status === 'Warning'
-              ? 'bg-[#C9A227]/20 text-[#C9A227] border border-[#C9A227]/40'
-              : 'bg-[#C1502E]/20 text-[#C1502E] border border-[#C1502E]/40'
-          }`}>
+                ? 'bg-[#C9A227]/20 text-[#C9A227] border border-[#C9A227]/40'
+                : 'bg-[#C1502E]/20 text-[#C1502E] border border-[#C1502E]/40'
+            }`}>
             {business.status}
           </span>
         </div>
