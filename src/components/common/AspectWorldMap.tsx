@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 
+
 // Fix Leaflet default icon path issue in Vite/webpack
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -23,21 +24,21 @@ interface LocationPin {
 // All Aspect Global locations from https://www.aspect.global/
 const ASPECT_LOCATIONS: LocationPin[] = [
   // India — primary cluster
-  { id: 'mumbai',       name: 'Mumbai (MMR HQ)',  country: 'India',       category: 'Group HQ · Bullion · Realty · Hospitality',    color: '#C9A227', lat: 19.076,  lng: 72.877,  isHQ: true },
-  { id: 'pune',         name: 'Pune',             country: 'India',       category: 'Realty · Infrastructure · Logistics',            color: '#0E7C7B', lat: 18.520,  lng: 73.855 },
-  { id: 'hyderabad',    name: 'Hyderabad',        country: 'India',       category: 'Infrastructure · Tech Park',                     color: '#0E7C7B', lat: 17.385,  lng: 78.487 },
-  { id: 'varanasi',     name: 'Varanasi',         country: 'India',       category: 'Aspect Sports · Mahadev Ascenders',              color: '#4A6FA5', lat: 25.317,  lng: 82.973 },
-  { id: 'kolkata',      name: 'Kolkata',          country: 'India',       category: 'Aspect Sports · Tigers of Kolkata',              color: '#4A6FA5', lat: 22.572,  lng: 88.363 },
+  { id: 'mumbai', name: 'Mumbai (MMR HQ)', country: 'India', category: 'Group HQ · Bullion · Realty · Hospitality', color: '#C9A227', lat: 19.076, lng: 72.877, isHQ: true },
+  { id: 'pune', name: 'Pune', country: 'India', category: 'Realty · Infrastructure · Logistics', color: '#0E7C7B', lat: 18.520, lng: 73.855 },
+  { id: 'hyderabad', name: 'Hyderabad', country: 'India', category: 'Infrastructure · Tech Park', color: '#0E7C7B', lat: 17.385, lng: 78.487 },
+  { id: 'varanasi', name: 'Varanasi', country: 'India', category: 'Aspect Sports · Mahadev Ascenders', color: '#4A6FA5', lat: 25.317, lng: 82.973 },
+  { id: 'kolkata', name: 'Kolkata', country: 'India', category: 'Aspect Sports · Tigers of Kolkata', color: '#4A6FA5', lat: 22.572, lng: 88.363 },
   // International
-  { id: 'dubai',        name: 'Dubai',            country: 'UAE',         category: 'Bullion Trading · Global Hub',                   color: '#C9A227', lat: 25.204,  lng: 55.270 },
-  { id: 'singapore',    name: 'Singapore',        country: 'Singapore',   category: 'Fintech · Regional Office',                      color: '#0E7C7B', lat: 1.352,   lng: 103.820 },
-  { id: 'london',       name: 'London',           country: 'UK',          category: 'International HQ · Investments',                 color: '#4A6FA5', lat: 51.507,  lng: -0.127 },
-  { id: 'usa',          name: 'New York',         country: 'USA',         category: 'Investments · Strategic Partnerships',           color: '#4A6FA5', lat: 40.713,  lng: -74.006 },
-  { id: 'sydney',       name: 'Sydney',           country: 'Australia',   category: 'Mining · Energy · Trade',                        color: '#0E7C7B', lat: -33.868, lng: 151.209 },
-  { id: 'tokyo',        name: 'Tokyo',            country: 'Japan',       category: 'Tech · Entertainment Partnerships',              color: '#E61C40', lat: 35.689,  lng: 139.692 },
-  { id: 'jakarta',      name: 'Jakarta',          country: 'Indonesia',   category: 'Infrastructure · Energy',                        color: '#0E7C7B', lat: -6.208,  lng: 106.845 },
-  { id: 'kualalumpur',  name: 'Kuala Lumpur',     country: 'Malaysia',    category: 'Trade · Hospitality Expansion',                  color: '#0E7C7B', lat: 3.139,   lng: 101.687 },
-  { id: 'mauritius',   name: 'Mauritius',         country: 'Mauritius',   category: 'Investments · Financial Hub',                    color: '#C9A227', lat: -20.348, lng: 57.552 },
+  { id: 'dubai', name: 'Dubai', country: 'UAE', category: 'Bullion Trading · Global Hub', color: '#C9A227', lat: 25.204, lng: 55.270 },
+  { id: 'singapore', name: 'Singapore', country: 'Singapore', category: 'Fintech · Regional Office', color: '#0E7C7B', lat: 1.352, lng: 103.820 },
+  { id: 'london', name: 'London', country: 'UK', category: 'International HQ · Investments', color: '#4A6FA5', lat: 51.507, lng: -0.127 },
+  { id: 'usa', name: 'New York', country: 'USA', category: 'Investments · Strategic Partnerships', color: '#4A6FA5', lat: 40.713, lng: -74.006 },
+  { id: 'sydney', name: 'Sydney', country: 'Australia', category: 'Mining · Energy · Trade', color: '#0E7C7B', lat: -33.868, lng: 151.209 },
+  { id: 'tokyo', name: 'Tokyo', country: 'Japan', category: 'Tech · Entertainment Partnerships', color: '#E61C40', lat: 35.689, lng: 139.692 },
+  { id: 'jakarta', name: 'Jakarta', country: 'Indonesia', category: 'Infrastructure · Energy', color: '#0E7C7B', lat: -6.208, lng: 106.845 },
+  { id: 'kualalumpur', name: 'Kuala Lumpur', country: 'Malaysia', category: 'Trade · Hospitality Expansion', color: '#0E7C7B', lat: 3.139, lng: 101.687 },
+  { id: 'mauritius', name: 'Mauritius', country: 'Mauritius', category: 'Investments · Financial Hub', color: '#C9A227', lat: -20.348, lng: 57.552 },
 ];
 
 function createCircleIcon(color: string, isHQ: boolean) {
@@ -207,13 +208,11 @@ export const AspectWorldMap: React.FC<AspectWorldMapProps> = ({ isLight = false 
   }, [isLight]);
 
   return (
-    <div className={`rounded-xl border overflow-hidden transition-colors ${
-      isLight ? 'border-slate-200 shadow-sm' : 'border-slate-800'
-    }`}>
-      {/* Header */}
-      <div className={`px-4 py-2.5 border-b flex items-center justify-between flex-wrap gap-2 transition-colors ${
-        isLight ? 'border-slate-200 bg-white text-slate-900' : 'border-slate-800 bg-[#0B1426] text-slate-100'
+    <div className={`rounded-xl border overflow-hidden transition-colors ${isLight ? 'border-slate-200 shadow-sm' : 'border-slate-800'
       }`}>
+      {/* Header */}
+      <div className={`px-4 py-2.5 border-b flex items-center justify-between flex-wrap gap-2 transition-colors ${isLight ? 'border-slate-200 bg-white text-slate-900' : 'border-slate-800 bg-[#0B1426] text-slate-100'
+        }`}>
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[#C9A227] animate-pulse" />
           <span className="text-xs font-bold text-[#C9A227] uppercase tracking-wider">
