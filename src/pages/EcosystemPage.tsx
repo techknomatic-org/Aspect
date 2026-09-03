@@ -113,13 +113,8 @@ export const EcosystemPage: React.FC<EcosystemPageProps> = ({ onSelectBusiness }
                 {activeBusiness.description}
               </p>
 
-              {/* Aspect Global World Presence Map (Filling Blank Space) */}
-              <div className="pt-2">
-                <AspectWorldMap isLight={isLight} />
-              </div>
-
               {/* Operational Telemetry Grid */}
-              <div className="mt-6">
+              <div className="mt-4">
                 <h4 className="text-xs font-outfit font-extrabold text-gold uppercase tracking-wider mb-3">
                   Key Operational Metrics
                 </h4>
@@ -134,7 +129,7 @@ export const EcosystemPage: React.FC<EcosystemPageProps> = ({ onSelectBusiness }
               </div>
 
               {/* Strategic Highlights */}
-              <div className="mt-6">
+              <div className="mt-4">
                 <h4 className="text-xs font-outfit font-extrabold text-gold uppercase tracking-wider mb-3">
                   Strategic Performance Highlights
                 </h4>
@@ -146,6 +141,11 @@ export const EcosystemPage: React.FC<EcosystemPageProps> = ({ onSelectBusiness }
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              {/* Aspect Global World Presence Map — at the bottom */}
+              <div className="mt-4">
+                <AspectWorldMap isLight={isLight} />
               </div>
             </div>
 
