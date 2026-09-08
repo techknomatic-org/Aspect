@@ -36,8 +36,8 @@ export const KPICard: React.FC<KPICardProps> = ({
       case 'gold':
         return {
           card: isLight
-            ? 'bg-gradient-to-br from-[#C9A227]/15 via-[#C9A227]/8 to-white border-[#C9A227]/30 hover:border-[#C9A227]/60 shadow-sm'
-            : 'bg-gradient-to-br from-[#C9A227]/22 via-[#C9A227]/10 to-[#1F190B] border-[#C9A227]/40 hover:border-[#C9A227]/70 shadow-lg',
+            ? 'bg-gradient-to-br from-[#C9A227]/20 via-[#C9A227]/10 to-[#C9A227]/[0.03] border-[#C9A227]/35 hover:border-[#C9A227]/60 shadow-sm'
+            : 'bg-gradient-to-br from-[#C9A227]/28 via-[#C9A227]/14 to-[#1F190B] border-[#C9A227]/45 hover:border-[#C9A227]/70 shadow-lg',
           icon: 'text-[#C9A227]',
           label: isLight ? 'text-[#B8860B]' : 'text-[#F59E0B]',
           badge: isLight ? 'bg-[#C9A227]/20 text-[#B8860B]' : 'bg-[#C9A227]/25 text-[#FBBF24]',
@@ -47,8 +47,8 @@ export const KPICard: React.FC<KPICardProps> = ({
       case 'red':
         return {
           card: isLight
-            ? 'bg-gradient-to-br from-[#E61C40]/15 via-[#E61C40]/8 to-white border-[#E61C40]/30 hover:border-[#E61C40]/60 shadow-sm'
-            : 'bg-gradient-to-br from-[#E61C40]/22 via-[#E61C40]/10 to-[#220D14] border-[#E61C40]/40 hover:border-[#E61C40]/70 shadow-lg',
+            ? 'bg-gradient-to-br from-[#E61C40]/20 via-[#E61C40]/10 to-[#E61C40]/[0.03] border-[#E61C40]/35 hover:border-[#E61C40]/60 shadow-sm'
+            : 'bg-gradient-to-br from-[#E61C40]/28 via-[#E61C40]/14 to-[#220D14] border-[#E61C40]/45 hover:border-[#E61C40]/70 shadow-lg',
           icon: 'text-[#E61C40]',
           label: isLight ? 'text-[#E61C40]' : 'text-[#FB7185]',
           badge: isLight ? 'bg-[#E61C40]/15 text-[#E61C40]' : 'bg-[#E61C40]/25 text-[#FDA4AF]',
@@ -58,8 +58,8 @@ export const KPICard: React.FC<KPICardProps> = ({
       case 'blue':
         return {
           card: isLight
-            ? 'bg-gradient-to-br from-[#4A6FA5]/15 via-[#4A6FA5]/8 to-white border-[#4A6FA5]/30 hover:border-[#4A6FA5]/60 shadow-sm'
-            : 'bg-gradient-to-br from-[#4A6FA5]/22 via-[#4A6FA5]/10 to-[#0F1729] border-[#4A6FA5]/40 hover:border-[#4A6FA5]/70 shadow-lg',
+            ? 'bg-gradient-to-br from-[#4A6FA5]/20 via-[#4A6FA5]/10 to-[#4A6FA5]/[0.03] border-[#4A6FA5]/35 hover:border-[#4A6FA5]/60 shadow-sm'
+            : 'bg-gradient-to-br from-[#4A6FA5]/28 via-[#4A6FA5]/14 to-[#0F1729] border-[#4A6FA5]/45 hover:border-[#4A6FA5]/70 shadow-lg',
           icon: 'text-[#4A6FA5]',
           label: isLight ? 'text-[#3B6BA5]' : 'text-[#60A5FA]',
           badge: isLight ? 'bg-[#4A6FA5]/15 text-[#3B6BA5]' : 'bg-[#4A6FA5]/25 text-[#93C5FD]',
@@ -70,8 +70,8 @@ export const KPICard: React.FC<KPICardProps> = ({
       default:
         return {
           card: isLight
-            ? 'bg-gradient-to-br from-[#0E7C7B]/15 via-[#0E7C7B]/8 to-white border-[#0E7C7B]/30 hover:border-[#0E7C7B]/60 shadow-sm'
-            : 'bg-gradient-to-br from-[#0E7C7B]/22 via-[#0E7C7B]/10 to-[#0A1624] border-[#0E7C7B]/40 hover:border-[#0E7C7B]/70 shadow-lg',
+            ? 'bg-gradient-to-br from-[#0E7C7B]/20 via-[#0E7C7B]/10 to-[#0E7C7B]/[0.03] border-[#0E7C7B]/35 hover:border-[#0E7C7B]/60 shadow-sm'
+            : 'bg-gradient-to-br from-[#0E7C7B]/28 via-[#0E7C7B]/14 to-[#0A1624] border-[#0E7C7B]/45 hover:border-[#0E7C7B]/70 shadow-lg',
           icon: 'text-[#0E7C7B]',
           label: isLight ? 'text-[#0E7C7B]' : 'text-[#2dd4bf]',
           badge: isLight ? 'bg-[#0E7C7B]/15 text-[#0E7C7B]' : 'bg-[#0E7C7B]/25 text-[#5eead4]',
@@ -92,16 +92,14 @@ export const KPICard: React.FC<KPICardProps> = ({
         {/* Top: Icon + Title */}
         <div className="flex items-center gap-1.5 min-w-0">
           {Icon && <Icon className={`w-4 h-4 ${tokens.icon} shrink-0`} />}
-          <div className={`text-xs lg:text-[13px] font-black tracking-wider ${textTitle} uppercase whitespace-nowrap`}>
+          <div className={`text-sm lg:text-[14.5px] font-black tracking-wider ${textTitle} uppercase truncate`}>
             {title}
           </div>
         </div>
 
         {/* Middle: Big Value */}
         <div className="my-0.5 min-w-0">
-          <span className={`${
-            value.length > 10 ? 'text-base lg:text-[17px] xl:text-lg' : 'text-xl lg:text-2xl'
-          } font-black ${textValue} tracking-tight font-sans block leading-none whitespace-nowrap`}>
+          <span className={`text-2xl lg:text-[26px] xl:text-[28px] font-black ${textValue} tracking-tight font-sans block leading-none whitespace-nowrap`}>
             {value}
           </span>
         </div>
@@ -138,7 +136,7 @@ export const KPICard: React.FC<KPICardProps> = ({
 
           {/* Middle line: Target Big Value */}
           <div className="my-0.5">
-            <span className={`text-base lg:text-lg xl:text-xl font-black tracking-tight leading-none ${textValue} whitespace-nowrap block font-sans`}>
+            <span className={`text-xl lg:text-[22px] xl:text-[24px] font-black tracking-tight leading-none ${textValue} whitespace-nowrap block font-sans`}>
               {target.value}
             </span>
           </div>

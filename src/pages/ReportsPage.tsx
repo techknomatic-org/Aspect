@@ -31,7 +31,7 @@ export const ReportsPage: React.FC = () => {
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="p-4 lg:p-6 space-y-6 max-w-[1720px] mx-auto select-none font-sans"
+      className="p-3.5 lg:p-5 space-y-4 lg:space-y-4.5 max-w-[1720px] mx-auto select-none font-sans"
     >
       {/* Page Header */}
       <PageHeader

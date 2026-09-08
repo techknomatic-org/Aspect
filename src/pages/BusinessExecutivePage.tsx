@@ -67,11 +67,11 @@ export const BusinessExecutivePage: React.FC<BusinessExecutivePageProps> = ({
 
   // Master Executive Design Tokens - Matching Overview Page Theme
   const cardBg = isLight
-    ? 'bg-white border-slate-300 shadow-sm text-[#1F2937]'
+    ? 'bg-white border-slate-200 shadow-2xs text-[#1F2937]'
     : 'bg-[#131C2E] border-slate-800 shadow-md text-slate-100';
 
   const innerCardBg = isLight
-    ? 'bg-slate-50 border-slate-300 text-[#1F2937]'
+    ? 'bg-slate-50/70 border-slate-200 text-[#1F2937]'
     : 'bg-[#0B1426] border-slate-800 text-slate-200';
 
   const textMuted = isLight ? 'text-[#6B7280]' : 'text-[#94A3B8]';
@@ -149,25 +149,29 @@ export const BusinessExecutivePage: React.FC<BusinessExecutivePageProps> = ({
     }
   };
 
-  // Gradient themes matching Overview Page
+  // Gradient themes matching Overview Page with vibrant trend color background
   const tealGrad = isLight
-    ? 'bg-gradient-to-br from-[#0E7C7B]/15 via-[#0E7C7B]/8 to-white border-[#0E7C7B]/30 hover:border-[#0E7C7B]/60 shadow-sm'
-    : 'bg-gradient-to-br from-[#0E7C7B]/22 via-[#0E7C7B]/10 to-[#0A1624] border-[#0E7C7B]/40 hover:border-[#0E7C7B]/70 shadow-lg';
+    ? 'bg-gradient-to-br from-[#0E7C7B]/20 via-[#0E7C7B]/10 to-[#0E7C7B]/[0.03] border-[#0E7C7B]/35 hover:border-[#0E7C7B]/60 shadow-sm'
+    : 'bg-gradient-to-br from-[#0E7C7B]/28 via-[#0E7C7B]/14 to-[#0A1624] border-[#0E7C7B]/45 hover:border-[#0E7C7B]/70 shadow-lg';
 
   const goldGrad = isLight
-    ? 'bg-gradient-to-br from-[#C9A227]/15 via-[#C9A227]/8 to-white border-[#C9A227]/30 hover:border-[#C9A227]/60 shadow-sm'
-    : 'bg-gradient-to-br from-[#C9A227]/22 via-[#C9A227]/10 to-[#1F190B] border-[#C9A227]/40 hover:border-[#C9A227]/70 shadow-lg';
+    ? 'bg-gradient-to-br from-[#C9A227]/20 via-[#C9A227]/10 to-[#C9A227]/[0.03] border-[#C9A227]/35 hover:border-[#C9A227]/60 shadow-sm'
+    : 'bg-gradient-to-br from-[#C9A227]/28 via-[#C9A227]/14 to-[#1F190B] border-[#C9A227]/45 hover:border-[#C9A227]/70 shadow-lg';
 
   const blueGrad = isLight
-    ? 'bg-gradient-to-br from-[#4A6FA5]/15 via-[#4A6FA5]/8 to-white border-[#4A6FA5]/30 hover:border-[#4A6FA5]/60 shadow-sm'
-    : 'bg-gradient-to-br from-[#4A6FA5]/22 via-[#4A6FA5]/10 to-[#0F1729] border-[#4A6FA5]/40 hover:border-[#4A6FA5]/70 shadow-lg';
+    ? 'bg-gradient-to-br from-[#4A6FA5]/20 via-[#4A6FA5]/10 to-[#4A6FA5]/[0.03] border-[#4A6FA5]/35 hover:border-[#4A6FA5]/60 shadow-sm'
+    : 'bg-gradient-to-br from-[#4A6FA5]/28 via-[#4A6FA5]/14 to-[#0F1729] border-[#4A6FA5]/45 hover:border-[#4A6FA5]/70 shadow-lg';
+
+  const redGrad = isLight
+    ? 'bg-gradient-to-br from-[#E61C40]/20 via-[#E61C40]/10 to-[#E61C40]/[0.03] border-[#E61C40]/35 hover:border-[#E61C40]/60 shadow-sm'
+    : 'bg-gradient-to-br from-[#E61C40]/28 via-[#E61C40]/14 to-[#220D14] border-[#E61C40]/45 hover:border-[#E61C40]/70 shadow-lg';
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 6 }}
+      initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="p-4 lg:p-6 space-y-4 max-w-[1720px] mx-auto select-none font-sans"
+      className="p-3.5 lg:p-5 space-y-4 lg:space-y-4.5 max-w-[1720px] mx-auto select-none font-sans"
     >
       {/* ------------------------------------------------------------- */}
       {/* TOP HEADER & TITLE AREA */}
@@ -195,32 +199,6 @@ export const BusinessExecutivePage: React.FC<BusinessExecutivePageProps> = ({
                 <ShieldCheck className="w-3.5 h-3.5" /> Board Review Ready
               </span>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2.5">
-            {/* View Tabs */}
-            <div className={`flex items-center p-1 rounded-xl border ${isLight ? 'bg-slate-100 border-slate-300' : 'bg-[#0B1426] border-slate-800'}`}>
-              {(['overview', 'financials', 'projects', 'risks'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${activeTab === tab
-                      ? 'bg-[#C9A227] text-[#0B1426] shadow-sm'
-                      : isLight ? 'text-[#6B7280] hover:text-[#1F2937]' : 'text-slate-400 hover:text-slate-200'
-                    }`}
-                >
-                  {tab === 'projects' ? 'Capex Projects' : tab === 'risks' ? 'Risk Matrix' : tab}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => openDirectiveModal()}
-              className="px-4 py-2 rounded-xl bg-[#0E7C7B] hover:brightness-110 text-white font-black text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
-            >
-              <Zap className="w-3.5 h-3.5" />
-              <span>CEO Directive</span>
-            </button>
           </div>
         </div>
 
@@ -254,7 +232,11 @@ export const BusinessExecutivePage: React.FC<BusinessExecutivePageProps> = ({
             </div>
           </div>
 
-          <div className={`p-3.5 rounded-2xl border text-right min-w-[210px] ${tealGrad}`}>
+          <div className={`p-3.5 rounded-2xl border text-right min-w-[210px] ${
+            currentBusiness.growth.includes('-') || currentBusiness.growth.includes('▼')
+              ? redGrad
+              : tealGrad
+          }`}>
             <span className="text-[10px] lg:text-[11px] uppercase font-extrabold text-[#0E7C7B] block tracking-wider">
               PORTFOLIO CONTRIBUTION
             </span>

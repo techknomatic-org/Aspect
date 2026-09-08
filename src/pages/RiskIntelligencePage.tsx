@@ -125,12 +125,9 @@ export const RiskIntelligencePage: React.FC = () => {
                   }`}
                 >
                   <div className="space-y-1 min-w-0 flex-1">
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm lg:text-base font-black text-[#C9A227] uppercase tracking-wider">
-                        {alert.division}
-                      </span>
-                      <StatusBadge status={alert.status} size="md" />
-                    </div>
+                    <span className="text-sm lg:text-base font-black text-[#C9A227] uppercase tracking-wider block">
+                      {alert.division}
+                    </span>
                     <h4 className={`text-sm lg:text-base font-black truncate ${isLight ? 'text-[#1F2937]' : 'text-white'}`}>
                       {alert.issue}
                     </h4>
@@ -138,6 +135,9 @@ export const RiskIntelligencePage: React.FC = () => {
                       <strong>Financial Exposure: </strong>
                       <span className="text-[#E61C40] font-black">{alert.impact}</span>
                     </p>
+                  </div>
+                  <div className="shrink-0 flex items-center">
+                    <StatusBadge status={alert.status} size="md" />
                   </div>
                 </div>
               ))}
