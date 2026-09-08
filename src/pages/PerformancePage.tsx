@@ -99,7 +99,7 @@ export const PerformancePage: React.FC = () => {
       />
 
       {/* Primary KPI Row - 6 Balanced Overview-Style Gradient Cards in 2 rows of 3 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-3.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 select-none shrink-0">
         {performanceKpis.map((kpi, i) => (
           <KPICard
             key={i}

@@ -72,7 +72,7 @@ export const OpportunitiesPage: React.FC = () => {
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="p-4 lg:p-6 space-y-6 max-w-[1720px] mx-auto select-none font-sans"
+      className="p-3.5 lg:p-5 space-y-4 lg:space-y-4.5 max-w-[1720px] mx-auto select-none font-sans"
     >
       {/* Page Header */}
       <PageHeader
@@ -87,9 +87,9 @@ export const OpportunitiesPage: React.FC = () => {
       />
 
       {/* Grid of 6 Opportunity Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5.5 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5 items-stretch">
         {opportunities.map((opp, idx) => (
-          <Card key={idx} noPadding className="p-6 lg:p-7 flex flex-col justify-between space-y-4 rounded-2xl shadow-sm hover:border-[#C9A227]/60 transition-all">
+          <Card key={idx} noPadding className="p-5 lg:p-6 flex flex-col justify-between space-y-4 rounded-2xl shadow-sm hover:border-[#C9A227]/60 transition-all">
             <div className="space-y-3.5">
               <div className="flex items-center justify-between pb-3.5 border-b border-slate-200 dark:border-slate-800">
                 <span className="text-sm lg:text-base font-black text-[#C9A227] uppercase tracking-wider">
@@ -109,28 +109,28 @@ export const OpportunitiesPage: React.FC = () => {
               </p>
 
               {/* 2 Metric Gradient Sub-Cards */}
-              <div className="grid grid-cols-2 gap-3.5 pt-1.5">
-                <div className={`p-4 lg:p-4.5 rounded-2xl border ${isLight
+              <div className="grid grid-cols-2 gap-4 pt-1.5">
+                <div className={`p-3 lg:p-3.5 rounded-2xl border ${isLight
                     ? 'bg-gradient-to-br from-[#0E7C7B]/10 via-[#0E7C7B]/5 to-white border-[#0E7C7B]/30 shadow-2xs'
                     : 'bg-[#0B1426] border-slate-800'
                   }`}>
                   <span className="text-xs lg:text-sm font-extrabold block uppercase tracking-wider text-[#0E7C7B] truncate">
                     Potential Value
                   </span>
-                  <span className={`text-2xl lg:text-3xl font-black mt-1.5 block leading-none tracking-tight ${isLight ? 'text-[#1F2937]' : 'text-white'
+                  <span className={`text-xl lg:text-2xl xl:text-3xl font-black mt-1 block leading-none tracking-tight ${isLight ? 'text-[#1F2937]' : 'text-white'
                     }`}>
                     {opp.val}
                   </span>
                 </div>
 
-                <div className={`p-4 lg:p-4.5 rounded-2xl border ${isLight
+                <div className={`p-3 lg:p-3.5 rounded-2xl border ${isLight
                     ? 'bg-gradient-to-br from-[#C9A227]/10 via-[#C9A227]/5 to-white border-[#C9A227]/30 shadow-2xs'
                     : 'bg-[#0B1426] border-slate-800'
                   }`}>
                   <span className="text-xs lg:text-sm font-extrabold block uppercase tracking-wider text-[#B8860B] dark:text-[#F59E0B] truncate">
                     Expected Growth
                   </span>
-                  <span className="text-2xl lg:text-3xl font-black text-[#0E7C7B] mt-1.5 block leading-none tracking-tight">
+                  <span className="text-xl lg:text-2xl xl:text-3xl font-black text-[#0E7C7B] mt-1 block leading-none tracking-tight">
                     {opp.growth}
                   </span>
                 </div>

@@ -77,11 +77,11 @@ export const RiskIntelligencePage: React.FC = () => {
       />
 
       {/* Top 3 Risk Summary KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 shrink-0">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 select-none shrink-0">
         {riskCategories.map((cat, idx) => (
           <div
             key={idx}
-            className={`p-3.5 lg:p-4 rounded-2xl border ${cat.cardGrad} flex items-center justify-between shadow-sm transition-all`}
+            className={`p-3 lg:p-3.5 rounded-2xl border ${cat.cardGrad} flex items-center justify-between h-[114px] shadow-sm transition-all`}
           >
             <div>
               <span className={`text-xs lg:text-sm font-black tracking-wider uppercase block ${

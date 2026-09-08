@@ -48,7 +48,7 @@ export const AICopilotPage: React.FC = () => {
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="p-4 lg:p-6 space-y-6 max-w-[1720px] mx-auto select-none font-sans"
+      className="p-3.5 lg:p-5 space-y-4 lg:space-y-4.5 max-w-[1720px] mx-auto select-none font-sans"
     >
       {/* Page Header */}
       <PageHeader
@@ -63,7 +63,7 @@ export const AICopilotPage: React.FC = () => {
       />
 
       {/* Main 12-Col Grid: 8-Col Chat Stream + 4-Col Prompt Starters & Telemetry */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5.5 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 items-stretch">
         {/* Left 8 Cols: Chat Conversation Stream */}
         <div className="lg:col-span-8 flex flex-col h-full">
           <Card
@@ -134,7 +134,7 @@ export const AICopilotPage: React.FC = () => {
                 <button
                   key={i}
                   onClick={() => handleSend(prompt)}
-                  className={`w-full text-left p-3.5 lg:p-4 rounded-2xl border text-xs lg:text-sm font-semibold transition-all cursor-pointer flex items-center justify-between gap-3 group ${isLight
+                  className={`w-full text-left p-3 lg:p-3.5 rounded-2xl border text-xs lg:text-sm font-semibold transition-all cursor-pointer flex items-center justify-between gap-3 group ${isLight
                       ? 'bg-white hover:bg-amber-50/60 border-slate-300 hover:border-[#C9A227]/60 text-[#1F2937] shadow-2xs'
                       : 'bg-[#0B1426] hover:bg-[#1A243B] border-slate-800 hover:border-[#C9A227]/40 text-slate-200'
                     }`}

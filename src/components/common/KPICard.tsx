@@ -87,7 +87,7 @@ export const KPICard: React.FC<KPICardProps> = ({
   const textTitle = isLight ? 'text-slate-800' : 'text-slate-100';
 
   return (
-    <div className={`${tokens.card} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between gap-3 min-h-[118px] relative overflow-hidden transition-all duration-200 group select-none`}>
+    <div className={`${tokens.card} border rounded-2xl p-3 lg:p-3.5 flex items-center justify-between gap-2.5 h-[114px] relative overflow-hidden transition-all duration-200 group select-none`}>
       <div className="flex flex-col justify-between h-full py-0.5 shrink-0 min-w-0 flex-1 space-y-1.5">
         <div className="flex items-center gap-2 min-w-0">
           {Icon && <Icon className={`w-4 h-4 ${tokens.icon} shrink-0`} />}

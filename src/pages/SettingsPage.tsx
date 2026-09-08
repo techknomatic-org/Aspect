@@ -30,7 +30,7 @@ export const SettingsPage: React.FC = () => {
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="p-4 lg:p-6 space-y-6 max-w-[1720px] mx-auto select-none font-sans"
+      className="p-3.5 lg:p-5 space-y-4 lg:space-y-4.5 max-w-[1720px] mx-auto select-none font-sans"
     >
       {/* Page Header */}
       <PageHeader
@@ -45,7 +45,7 @@ export const SettingsPage: React.FC = () => {
       />
 
       {/* 2-Column Balanced Settings Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5.5 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 items-stretch">
         {/* Left: Authentication & Access Protocols */}
         <div className="flex flex-col h-full">
           <Card
@@ -53,11 +53,11 @@ export const SettingsPage: React.FC = () => {
             subtitle="Multi-factor authentication, cryptographic keychains & hardware token verification"
             className="flex flex-col justify-between h-full space-y-3.5 rounded-2xl shadow-sm"
           >
-            <div className="space-y-3 flex-1 flex flex-col justify-between">
+            <div className="space-y-2.5 flex-1 flex flex-col justify-between">
               {authProtocols.map((item, idx) => (
                 <div
                   key={idx}
-                  className={`p-3.5 lg:p-4 rounded-2xl border flex items-center justify-between gap-3.5 transition-all ${isLight
+                  className={`p-3 lg:p-3.5 rounded-2xl border flex items-center justify-between gap-3.5 transition-all ${isLight
                       ? 'bg-white border-slate-300 hover:border-[#C9A227]/60 text-[#1F2937] shadow-2xs'
                       : 'bg-[#0B1426] border-slate-800 hover:border-[#C9A227]/40 text-slate-100'
                     }`}
@@ -66,7 +66,7 @@ export const SettingsPage: React.FC = () => {
                     <span className={`font-black text-sm lg:text-base block truncate ${isLight ? 'text-[#1F2937]' : 'text-white'}`}>
                       {item.title}
                     </span>
-                    <span className={`text-xs lg:text-sm font-semibold mt-1 block truncate ${isLight ? 'text-[#6B7280]' : 'text-slate-400'}`}>
+                    <span className={`text-xs lg:text-sm font-semibold mt-0.5 block truncate ${isLight ? 'text-[#6B7280]' : 'text-slate-400'}`}>
                       {item.desc}
                     </span>
                   </div>
@@ -89,11 +89,11 @@ export const SettingsPage: React.FC = () => {
             subtitle="Real-time synchronization status with ERP, LBMA, and Grid telemetry feeds"
             className="flex flex-col justify-between h-full space-y-3.5 rounded-2xl shadow-sm"
           >
-            <div className="space-y-3 flex-1 flex flex-col justify-between">
+            <div className="space-y-2.5 flex-1 flex flex-col justify-between">
               {dataStreams.map((item, idx) => (
                 <div
                   key={idx}
-                  className={`p-3.5 lg:p-4 rounded-2xl border flex items-center justify-between gap-3.5 transition-all ${isLight
+                  className={`p-3 lg:p-3.5 rounded-2xl border flex items-center justify-between gap-3.5 transition-all ${isLight
                       ? 'bg-white border-slate-300 hover:border-[#C9A227]/60 text-[#1F2937] shadow-2xs'
                       : 'bg-[#0B1426] border-slate-800 hover:border-[#C9A227]/40 text-slate-100'
                     }`}
@@ -102,7 +102,7 @@ export const SettingsPage: React.FC = () => {
                     <span className={`font-black text-sm lg:text-base block truncate ${isLight ? 'text-[#1F2937]' : 'text-white'}`}>
                       {item.title}
                     </span>
-                    <span className={`text-xs lg:text-sm font-semibold mt-1 block truncate ${isLight ? 'text-[#6B7280]' : 'text-slate-400'}`}>
+                    <span className={`text-xs lg:text-sm font-semibold mt-0.5 block truncate ${isLight ? 'text-[#6B7280]' : 'text-slate-400'}`}>
                       {item.desc}
                     </span>
                   </div>

@@ -66,7 +66,7 @@ export const GlobalViewPage: React.FC = () => {
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="p-4 lg:p-6 space-y-6 max-w-[1720px] mx-auto select-none font-sans"
+      className="p-3.5 lg:p-5 space-y-4 lg:space-y-4.5 max-w-[1720px] mx-auto select-none font-sans"
     >
       {/* Page Header */}
       <PageHeader
@@ -81,7 +81,7 @@ export const GlobalViewPage: React.FC = () => {
       />
 
       {/* Top 4 Global Strategic KPI Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 select-none shrink-0">
         {globalKpis.map((kpi, idx) => (
           <KPICard
             key={idx}
@@ -97,7 +97,7 @@ export const GlobalViewPage: React.FC = () => {
       </div>
 
       {/* Main Grid: 8-col Interactive Map + 4-col Regional Revenue Matrix */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 items-stretch">
         {/* Left 8 Cols: Large Interactive World Map */}
         <div className="lg:col-span-8 flex flex-col h-full">
           <Card

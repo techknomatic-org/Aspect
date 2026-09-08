@@ -29,7 +29,7 @@ export const EcosystemPage: React.FC<EcosystemPageProps> = ({ onSelectBusiness }
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="p-4 lg:p-6 space-y-5 max-w-[1720px] mx-auto select-none font-sans"
+      className="p-3.5 lg:p-5 space-y-4 lg:space-y-4.5 max-w-[1720px] mx-auto select-none font-sans"
     >
       {/* Header Section */}
       <PageHeader
@@ -44,7 +44,7 @@ export const EcosystemPage: React.FC<EcosystemPageProps> = ({ onSelectBusiness }
       />
 
       {/* Main 12-Col Grid: Left 5 Cols (9 Categories List) + Right 7 Cols (Selected Detail Deep-Dive) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 items-stretch">
         {/* Left Column: 9 Business Worlds List */}
         <div className="lg:col-span-5 flex flex-col justify-between gap-2.5 h-full">
           {businesses.map((b) => {
@@ -138,7 +138,7 @@ export const EcosystemPage: React.FC<EcosystemPageProps> = ({ onSelectBusiness }
                   <h4 className="text-xs lg:text-sm font-black text-[#C9A227] uppercase tracking-wider mb-2">
                     KEY OPERATIONAL METRICS
                   </h4>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 lg:gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 lg:gap-4">
                     {activeBusiness.operationalMetrics && Object.entries(activeBusiness.operationalMetrics).map(([k, v], idx) => {
                       const gradClass = idx % 3 === 0
                         ? isLight
@@ -159,7 +159,7 @@ export const EcosystemPage: React.FC<EcosystemPageProps> = ({ onSelectBusiness }
                           : 'text-[#3B6BA5] dark:text-[#60A5FA]';
 
                       return (
-                        <div key={k} className={`py-3.5 px-4 min-h-[80px] lg:min-h-[88px] rounded-2xl border ${gradClass} shadow-2xs flex flex-col justify-between`}>
+                        <div key={k} className={`p-3 lg:p-3.5 min-h-[88px] rounded-2xl border ${gradClass} shadow-2xs flex flex-col justify-between`}>
                           <span className={`text-[11px] lg:text-xs font-extrabold block uppercase tracking-wider leading-snug break-words ${labelColor}`}>
                             {k}
                           </span>
