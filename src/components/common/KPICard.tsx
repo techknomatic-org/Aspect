@@ -88,28 +88,33 @@ export const KPICard: React.FC<KPICardProps> = ({
 
   return (
     <div className={`${tokens.card} border rounded-2xl p-3 lg:p-3.5 flex items-center justify-between gap-2.5 h-[114px] relative overflow-hidden transition-all duration-200 group select-none`}>
-      <div className="flex flex-col justify-between h-full py-0.5 shrink-0 min-w-0 flex-1 space-y-1.5">
-        <div className="flex items-center gap-2 min-w-0">
+      <div className="flex flex-col justify-between h-full py-0.5 min-w-0 flex-1">
+        {/* Top: Icon + Title */}
+        <div className="flex items-center gap-1.5 min-w-0">
           {Icon && <Icon className={`w-4 h-4 ${tokens.icon} shrink-0`} />}
-          <div className={`text-[11px] lg:text-xs font-black tracking-wider ${textTitle} uppercase leading-tight`}>
+          <div className={`text-xs lg:text-[13px] font-black tracking-wider ${textTitle} uppercase whitespace-nowrap`}>
             {title}
           </div>
         </div>
 
-        <div>
-          <span className={`text-lg lg:text-xl xl:text-2xl font-black ${textValue} tracking-tight font-sans block leading-none`}>
+        {/* Middle: Big Value */}
+        <div className="my-0.5 min-w-0">
+          <span className={`${
+            value.length > 10 ? 'text-base lg:text-[17px] xl:text-lg' : 'text-xl lg:text-2xl'
+          } font-black ${textValue} tracking-tight font-sans block leading-none whitespace-nowrap`}>
             {value}
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] lg:text-xs">
+        {/* Bottom: vsText & Change Trend */}
+        <div className="flex items-center gap-1.5 text-xs lg:text-[12px] whitespace-nowrap min-w-0">
           {vsText && <span className={textMuted}>{vsText}</span>}
           {change && (
-            <span className={`font-bold ${tokens.label} inline-flex items-center shrink-0`}>
+            <span className={`font-bold ${tokens.label} flex items-center shrink-0`}>
               {change.includes('▼') || change.includes('-') ? (
-                <TrendingDown className="w-3.5 h-3.5 mr-0.5 inline" />
+                <TrendingDown className="w-3.5 h-3.5 mr-0.5 inline shrink-0" />
               ) : (
-                <TrendingUp className="w-3.5 h-3.5 mr-0.5 inline" />
+                <TrendingUp className="w-3.5 h-3.5 mr-0.5 inline shrink-0" />
               )}
               {change}
             </span>
@@ -118,26 +123,29 @@ export const KPICard: React.FC<KPICardProps> = ({
       </div>
 
       {target && (
-        <div className={`flex flex-col justify-between h-full py-0.5 shrink-0 pl-3 lg:pl-3.5 border-l ${tokens.divider} space-y-1.5 min-w-[105px] lg:min-w-[120px]`}>
+        <div className={`flex flex-col justify-between h-full py-0.5 shrink-0 min-w-[95px] lg:min-w-[105px] pl-3 lg:pl-3.5 border-l ${tokens.divider}`}>
+          {/* Top line: TARGET label + Badge */}
           <div className="flex items-center justify-between gap-1">
-            <span className={`text-[10px] lg:text-xs font-extrabold tracking-wider uppercase ${tokens.label} whitespace-nowrap`}>
+            <span className={`text-xs lg:text-[12px] font-extrabold tracking-wider uppercase ${tokens.label} whitespace-nowrap`}>
               {target.label || 'TARGET'}
             </span>
             {target.badge && (
-              <span className={`text-[10px] lg:text-xs font-black px-1.5 py-0.5 rounded-md ${tokens.badge} whitespace-nowrap leading-none shrink-0`}>
+              <span className={`text-[11px] lg:text-xs font-black px-1.5 lg:px-2 py-0.5 rounded-md ${tokens.badge} whitespace-nowrap leading-none shrink-0`}>
                 {target.badge}
               </span>
             )}
           </div>
 
-          <div>
-            <span className={`text-sm lg:text-base xl:text-lg font-black tracking-tight leading-none ${textValue} whitespace-nowrap block font-sans`}>
+          {/* Middle line: Target Big Value */}
+          <div className="my-0.5">
+            <span className={`text-base lg:text-lg xl:text-xl font-black tracking-tight leading-none ${textValue} whitespace-nowrap block font-sans`}>
               {target.value}
             </span>
           </div>
 
-          <div className="text-[10px] lg:text-xs whitespace-nowrap">
-            <span className={`font-bold ${tokens.status}`}>
+          {/* Bottom line: Status / Delta */}
+          <div className="flex items-center justify-between gap-1 text-xs lg:text-[12px] whitespace-nowrap">
+            <span className={`font-bold ${tokens.status} whitespace-nowrap`}>
               {target.statusText}
             </span>
           </div>

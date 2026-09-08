@@ -12,7 +12,7 @@ export const PerformancePage: React.FC = () => {
 
   const performanceKpis = [
     {
-      title: 'GROUP REVENUE (YTD)',
+      title: 'GROUP REVENUE',
       val: '₹ 24.9k Cr',
       ly: 'vs LY ₹ 21.5k Cr',
       diff: '▲ 15.9%',
@@ -21,7 +21,7 @@ export const PerformancePage: React.FC = () => {
       target: { label: 'TARGET', badge: '110.5%', value: '₹ 22.5k Cr', statusText: '+₹2.4k Cr' },
     },
     {
-      title: 'PROFIT AFTER TAX (YTD)',
+      title: 'PROFIT AFTER TAX',
       val: '₹ 4.2k Cr',
       ly: 'vs LY ₹ 3.5k Cr',
       diff: '▲ 18.7%',
@@ -30,7 +30,7 @@ export const PerformancePage: React.FC = () => {
       target: { label: 'TARGET', badge: '109.2%', value: '₹ 3.8k Cr', statusText: '+₹0.4k Cr' },
     },
     {
-      title: 'GROUP EBITDA (YTD)',
+      title: 'GROUP EBITDA',
       val: '₹ 5.5k Cr',
       ly: 'vs LY ₹ 4.7k Cr',
       diff: '▲ 17.3%',
@@ -48,7 +48,7 @@ export const PerformancePage: React.FC = () => {
       target: { label: 'BENCHMARK', badge: '+2.7pp', value: '20.0%', statusText: 'Exceeded' },
     },
     {
-      title: 'NET CASH POSITION',
+      title: 'NET CASH',
       val: '₹ 6.8k Cr',
       ly: 'vs LY ₹ 6.2k Cr',
       diff: '▲ 9.8%',
