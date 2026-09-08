@@ -1,19 +1,19 @@
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  Globe2, 
-  Building2, 
-  LineChart, 
-  Map, 
-  ShieldAlert, 
-  Lightbulb, 
+import {
+  LayoutDashboard,
+  Globe2,
+  Building2,
+  LineChart,
+  Map,
+  ShieldAlert,
+  Lightbulb,
   Leaf,
   FileText,
   Sparkles,
   Settings,
   LogOut,
-  PanelLeftClose,
-  PanelLeftOpen
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -81,34 +81,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside
       className={`${
         isCollapsed ? 'w-20' : 'w-64'
-      } ${
-        isLight
-          ? 'bg-white border-slate-300 text-[#1F2937] shadow-sm'
-          : 'bg-[#0B1426] border-white/10 text-slate-100 shadow-2xl'
-      } border-r flex flex-col justify-between fixed left-0 top-16 h-[calc(100vh-64px)] z-40 select-none shrink-0 transition-all duration-300 ease-in-out`}
+      } bg-[linear-gradient(180deg,#291046_0%,#1a2444_45%,#084C42_100%)] border-r border-white/10 text-white shadow-2xl flex flex-col justify-between fixed left-0 top-16 h-[calc(100vh-64px)] z-40 select-none shrink-0 transition-all duration-300 ease-in-out font-sans`}
     >
       <div className="flex flex-col h-full overflow-hidden">
         {/* Toggle Minimize/Maximize Button Section */}
         {onToggleCollapse && (
-          <div className={`p-3 flex items-center ${isCollapsed ? 'justify-center' : 'justify-end'} border-b shrink-0 ${
-            isLight ? 'border-slate-200 bg-[#F8FAFC]' : 'border-white/5'
-          }`}>
+          <div className={`p-2.5 px-3 flex items-center ${isCollapsed ? 'justify-center' : 'justify-end'} border-b border-white/10 bg-[#291046]/60 backdrop-blur-sm shrink-0`}>
             <button
               onClick={onToggleCollapse}
-              className={`p-2 rounded-lg transition-colors cursor-pointer ${
-                isLight
-                  ? 'text-slate-600 hover:text-[#1F2937] hover:bg-slate-200'
-                  : 'text-[#94A3B8] hover:text-[#C9A227] hover:bg-[#172033]'
-              }`}
-              title={isCollapsed ? "Maximize Sidebar" : "Minimize Sidebar"}
+              className="p-1.5 rounded-lg border border-white/15 bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer shadow-sm hover:scale-105 flex items-center justify-center group"
+              title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             >
-              {isCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+              {isCollapsed ? (
+                <ChevronRight className="w-4.5 h-4.5 text-white transition-transform group-hover:translate-x-0.5" />
+              ) : (
+                <ChevronLeft className="w-4.5 h-4.5 text-white transition-transform group-hover:-translate-x-0.5" />
+              )}
             </button>
           </div>
         )}
 
         {/* Navigation Items */}
-        <nav className="p-3 space-y-1 overflow-y-auto flex-1 custom-scrollbar">
+        <nav className="p-3 space-y-1.5 overflow-y-auto flex-1 custom-scrollbar">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const isActive =
@@ -119,20 +113,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => handleItemClick(item)}
-                className={`w-full flex items-center ${isCollapsed ? 'justify-center px-0' : 'gap-3 px-3.5'} py-2.5 rounded-xl text-xs font-bold transition-all duration-150 cursor-pointer ${
+                className={`w-full flex items-center ${isCollapsed ? 'justify-center px-0' : 'gap-3 px-3.5'} py-2.5 rounded-xl text-xs font-extrabold transition-all duration-150 cursor-pointer group ${
                   isActive
-                    ? isLight
-                      ? 'bg-slate-200 text-[#1F2937] border-l-4 border-l-[#C9A227] shadow-sm'
-                      : 'bg-[#172033] text-[#C9A227] border-l-4 border-l-[#C9A227] shadow-sm'
-                    : isLight
-                    ? 'text-slate-600 hover:text-[#1F2937] hover:bg-slate-100 border-l-4 border-transparent'
-                    : 'text-[#94A3B8] hover:text-white hover:bg-[#172033]/60 border-l-4 border-transparent'
+                    ? 'bg-white text-[#1F2937] border border-[#D10B2F] border-l-4 border-l-[#D10B2F] shadow-lg ring-1 ring-[#D10B2F]/30'
+                    : 'bg-white/95 text-[#1F2937] border border-white/20 hover:bg-white hover:border-[#C9A227]/40 shadow-sm'
                 }`}
                 title={isCollapsed ? item.label : undefined}
               >
-                <Icon className={`w-4.5 h-4.5 shrink-0 ${isActive ? (isLight ? 'text-slate-900' : 'text-[#C9A227]') : 'text-slate-400'}`} />
+                <Icon className={`w-4.5 h-4.5 shrink-0 transition-colors ${
+                  isActive 
+                    ? 'text-[#D10B2F]' 
+                    : 'text-[#475569] group-hover:text-[#084C42]'
+                }`} />
                 {!isCollapsed && (
-                  <span className="truncate font-medium text-xs">
+                  <span className="truncate font-extrabold text-xs tracking-wider text-[#1F2937]">
                     {item.label}
                   </span>
                 )}
@@ -142,31 +136,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
 
         {/* Bottom Profile Section */}
-        <div className={`p-3 border-t shrink-0 ${isLight ? 'border-slate-200' : 'border-white/10'}`}>
-          <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} p-2 rounded-xl ${
-            isLight ? 'bg-slate-100 border border-slate-200' : 'bg-[#24345C]/60'
-          }`}>
+        <div className="p-3 border-t border-white/10 bg-[#084C42]/70 backdrop-blur-sm shrink-0">
+          <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} p-2.5 rounded-xl bg-white/10 border border-white/15 shadow-lg transition-all`}>
             <div className="flex items-center gap-2.5 min-w-0">
               <img
                 src={user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80'}
                 alt={user?.name || 'Alex Morgan'}
-                className="w-8 h-8 rounded-full object-cover border border-[#C9A227]/60 shrink-0"
+                className="w-8 h-8 rounded-full object-cover border-2 border-[#D10B2F] shrink-0 shadow-md"
               />
               {!isCollapsed && (
                 <div className="min-w-0">
-                  <div className={`text-xs font-bold truncate ${isLight ? 'text-[#1F2937]' : 'text-white'}`}>
+                  <div className="text-xs font-bold truncate text-white">
                     {user?.name || 'Alex Morgan'}
                   </div>
-                  <div className="text-[10px] text-[#C9A227] truncate font-medium">{user?.role || 'Group Executive'}</div>
+                  <div className="text-[10px] text-[#EFE9DC] truncate font-extrabold tracking-wider uppercase">
+                    {user?.role || 'Group Executive'}
+                  </div>
                 </div>
               )}
             </div>
             {!isCollapsed && (
               <button
                 onClick={handleLogout}
-                className={`p-1.5 transition-colors cursor-pointer shrink-0 ${
-                  isLight ? 'text-slate-500 hover:text-[#C1502E]' : 'text-[#94A3B8] hover:text-[#C1502E]'
-                }`}
+                className="p-1.5 rounded-lg transition-colors cursor-pointer shrink-0 text-white/60 hover:text-[#D10B2F] hover:bg-[#D10B2F]/20"
                 title="Sign Out"
               >
                 <LogOut className="w-4 h-4" />

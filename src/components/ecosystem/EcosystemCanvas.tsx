@@ -5,6 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 interface EcosystemCanvasProps {
   businesses: EcosystemBusiness[];
+  selectedBusinessId?: string;
   onSelectBusiness: (business: EcosystemBusiness) => void;
   onExploreClick?: () => void;
 }
@@ -24,6 +25,7 @@ const BUSINESS_ORDER = [
 
 export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
   businesses,
+  selectedBusinessId,
   onSelectBusiness,
 }) => {
   const [hoveredBusinessId, setHoveredBusinessId] = useState<string | null>(null);
@@ -39,9 +41,9 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
     // Start at -pi/2 (12 o'clock top) and space evenly clockwise in static positions
     const baseAngle = (itemIndex / total) * 2 * Math.PI - Math.PI / 2;
 
-    // Expanded ellipse radii to fit available horizontal and vertical space
-    const rx = 450; // horizontal radius (px)
-    const ry = 280; // vertical radius (px)
+    // Calibrated ellipse radii for perfect proportion & zero clipping
+    const rx = 345; // horizontal radius (px)
+    const ry = 265; // vertical radius (px) - expanded to properly utilize top & bottom space
 
     const x = Math.round(rx * Math.cos(baseAngle));
     const y = Math.round(ry * Math.sin(baseAngle));
@@ -51,23 +53,34 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
 
   return (
     <div className={`${isLight
-        ? 'bg-[#EEF1F8] border-slate-300 shadow-sm text-[#1F2937]'
-        : 'bg-[#0B1426] border-white/10 shadow-2xl text-slate-100'
-      } border rounded-2xl p-4 lg:p-5 flex flex-col justify-between relative overflow-hidden select-none h-full min-h-0`}>
-      {/* Background Radial Glow */}
-      <div className={`absolute inset-0 pointer-events-none ${isLight
-          ? 'bg-[radial-gradient(circle_at_center,rgba(201,162,39,0.08)_0%,rgba(238,241,248,0)_70%)]'
-          : 'bg-[radial-gradient(circle_at_center,rgba(230,28,64,0.15)_0%,rgba(11,20,38,0)_70%)]'
-        }`} />
+      ? 'bg-[#EEF1F8] border-slate-300 shadow-sm text-[#1F2937]'
+      : 'bg-[#0B1426] border-white/10 shadow-2xl text-slate-100'
+      } border rounded-2xl p-2.5 lg:p-3 flex flex-col justify-between relative overflow-hidden select-none h-full min-h-0`}>
+      {/* Background Industries & Conglomerate Landscape Image (Theme-aware, high-clarity & rich) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
+        <img
+          src={isLight ? "/assets/industries_backdrop_light.jpg" : "/assets/industries_backdrop_dark.jpg"}
+          alt="Aspect Global Industries Landscape"
+          className={`w-full h-full object-cover object-center transition-all duration-500 ${isLight
+            ? 'opacity-15 saturate-[1.05] contrast-[1.02]'
+            : 'opacity-20 contrast-110 brightness-105'
+            }`}
+        />
+        {/* Subtle radial center vignette to keep globe and orbit cards prominent and legible */}
+        <div className={`absolute inset-0 ${isLight
+          ? 'bg-[radial-gradient(circle_at_center,transparent_30%,rgba(238,241,248,0.4)_70%,rgba(238,241,248,0.85)_100%)]'
+          : 'bg-[radial-gradient(circle_at_center,transparent_30%,rgba(11,20,38,0.4)_70%,rgba(11,20,38,0.9)_100%)]'
+          }`} />
+      </div>
 
 
-      {/* Main Centerpiece Canvas — Expanded to Fill Available Space */}
-      <div className="relative w-full flex-1 min-h-0 flex items-center justify-center my-1">
-        {/* REAL 3D PLANET EARTH GLOBE CENTERPIECE — Enlarged for maximum visual impact */}
-        <div className="relative z-20 w-[300px] h-[300px] lg:w-[420px] lg:h-[420px] rounded-full flex items-center justify-center shadow-[0_0_120px_rgba(201,162,39,0.35)] group shrink-0">
+      {/* Main Centerpiece Canvas — Perfectly Calibrated Proportions */}
+      <div className="relative w-full flex-1 min-h-0 flex items-center justify-center">
+        {/* REAL 3D PLANET EARTH GLOBE CENTERPIECE */}
+        <div className="relative z-20 w-[260px] h-[260px] lg:w-[320px] lg:h-[320px] xl:w-[350px] xl:h-[350px] rounded-full flex items-center justify-center shadow-[0_0_90px_rgba(201,162,39,0.35)] group shrink-0">
           {/* Atmosphere & Glow Rings */}
           <div className="absolute inset-0 rounded-full border-2 border-[#C9A227]/50 animate-pulse-glow" />
-          <div className="absolute -inset-5 rounded-full border border-[#C9A227]/30 animate-spin-slow pointer-events-none" />
+          <div className="absolute -inset-3.5 rounded-full border border-[#C9A227]/30 animate-spin-slow pointer-events-none" />
 
           {/* Real 3D Earth Globe Sphere */}
           <div className="w-full h-full rounded-full border-2 border-[#C9A227]/60 overflow-hidden relative shadow-2xl bg-[#14213D]">
@@ -83,24 +96,24 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
 
             {/* Central Highlighted ASPECT GLOBAL Title */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 p-2">
-              <h2 className="font-extrabold text-base lg:text-lg tracking-[0.2em] text-white uppercase font-sans drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
+              <h2 className="font-black text-base lg:text-lg xl:text-xl tracking-[0.2em] text-white uppercase font-sans drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
                 ASPECT
               </h2>
-              <span className="text-xs lg:text-sm font-extrabold text-[#C9A227] tracking-[0.3em] uppercase drop-shadow-[0_0_15px_rgba(201,162,39,0.95)] mt-0.5">
+              <span className="text-xs lg:text-[13px] xl:text-sm font-black text-[#C9A227] tracking-[0.3em] uppercase drop-shadow-[0_0_15px_rgba(201,162,39,0.95)] mt-0.5">
                 GLOBAL
               </span>
             </div>
           </div>
         </div>
 
-        {/* SVG Radial Lines & Gold Orbital Rings — Expanded to Match Orbit */}
+        {/* SVG Radial Lines & Gold Orbital Rings */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible">
           {/* Main Outer Orbital Ring */}
           <ellipse
             cx="50%"
             cy="50%"
-            rx="450"
-            ry="280"
+            rx="345"
+            ry="265"
             fill="none"
             stroke="url(#orbitGoldGrad3D)"
             strokeWidth="1.5"
@@ -110,8 +123,8 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
           <ellipse
             cx="50%"
             cy="50%"
-            rx="315"
-            ry="195"
+            rx="245"
+            ry="190"
             fill="none"
             stroke="#C9A227"
             strokeWidth="1"
@@ -130,6 +143,7 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
           {/* Dynamic Radial Spokes connecting Earth globe center to each revolving 3D island node */}
           {businesses.map((b) => {
             const pos = getDynamicPosition(b.id);
+            const isSelected = selectedBusinessId === b.id;
             return (
               <g key={`spoke-${b.id}`}>
                 <line
@@ -137,16 +151,16 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
                   y1="50%"
                   x2={`calc(50% + ${pos.x}px)`}
                   y2={`calc(50% + ${pos.y}px)`}
-                  stroke="#C9A227"
-                  strokeWidth={hoveredBusinessId === b.id ? '2' : '1'}
-                  strokeOpacity={hoveredBusinessId === b.id ? '0.85' : '0.25'}
+                  stroke={isSelected ? '#0E7C7B' : '#C9A227'}
+                  strokeWidth={hoveredBusinessId === b.id || isSelected ? '2' : '1'}
+                  strokeOpacity={hoveredBusinessId === b.id || isSelected ? '0.85' : '0.25'}
                   strokeDasharray="2 2"
                 />
                 <circle
                   cx={`calc(50% + ${pos.x}px)`}
                   cy={`calc(50% + ${pos.y}px)`}
-                  r="3.5"
-                  fill="#C9A227"
+                  r={isSelected ? '4.5' : '3.5'}
+                  fill={isSelected ? '#0E7C7B' : '#C9A227'}
                   className="shadow-md"
                 />
               </g>
@@ -158,6 +172,7 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
         {businesses.map((business) => {
           const pos = getDynamicPosition(business.id);
           const isHovered = hoveredBusinessId === business.id;
+          const isSelected = selectedBusinessId === business.id;
           const isLeftOfEarth = pos.x < -20;
 
           return (
@@ -170,21 +185,24 @@ export const EcosystemCanvas: React.FC<EcosystemCanvasProps> = ({
               onMouseEnter={() => setHoveredBusinessId(business.id)}
               onMouseLeave={() => setHoveredBusinessId(null)}
               style={{
-                transform: `translate3d(${pos.x}px, ${pos.y}px, 0px) scale(${isHovered ? 1.15 : 1})`,
-                zIndex: isHovered ? 50 : 25,
+                transform: `translate3d(${pos.x}px, ${pos.y}px, 0px) scale(${isHovered ? 1.15 : isSelected ? 1.06 : 1})`,
+                zIndex: isHovered ? 50 : isSelected ? 35 : 25,
               }}
               className="absolute cursor-pointer transition-transform duration-100 ease-linear flex flex-col items-center group"
             >
               {/* Pill Label Badge — Planet Icon oriented towards Earth */}
-              <div className={`flex items-center gap-2 ${isLeftOfEarth ? 'flex-row-reverse' : 'flex-row'
-                } ${isLight
+              <div className={`flex items-center gap-2 ${isLeftOfEarth ? 'flex-row-reverse' : 'flex-row'} ${isSelected
+                ? isLight
+                  ? 'bg-white border-[#0E7C7B] ring-2 ring-[#0E7C7B]/40 text-[#0E7C7B] shadow-lg'
+                  : 'bg-[#172033] border-[#0E7C7B] ring-2 ring-[#0E7C7B]/50 text-[#2dd4bf] shadow-[0_0_20px_rgba(14,124,123,0.4)]'
+                : isLight
                   ? 'bg-white/95 border-[#C9A227]/40 text-[#1F2937]'
                   : 'bg-[#172033]/95 border-[#C9A227]/40 text-white'
                 } backdrop-blur-md border group-hover:border-[#C9A227] px-3.5 py-1.5 rounded-full shadow-xl shadow-black/70 transition-all`}>
                 <EcosystemWorldVisual
                   worldId={business.id}
                   image3dUrl={business.image3dUrl}
-                  isHovered={isHovered}
+                  isHovered={isHovered || isSelected}
                 />
                 <span className="text-xs font-extrabold tracking-wider uppercase whitespace-nowrap">
                   {business.name}

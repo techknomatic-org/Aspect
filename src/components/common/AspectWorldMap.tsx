@@ -87,9 +87,11 @@ function createCircleIcon(color: string, isHQ: boolean) {
 
 interface AspectWorldMapProps {
   isLight?: boolean;
+  height?: string;
+  className?: string;
 }
 
-export const AspectWorldMap: React.FC<AspectWorldMapProps> = ({ isLight = false }) => {
+export const AspectWorldMap: React.FC<AspectWorldMapProps> = ({ isLight = false, height, className = '' }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
@@ -113,6 +115,8 @@ export const AspectWorldMap: React.FC<AspectWorldMapProps> = ({ isLight = false 
         .leaflet-container {
           font-family: 'Inter', sans-serif !important;
           background: ${isLight ? '#F1F5F9' : '#07101F'} !important;
+          width: 100% !important;
+          height: 100% !important;
         }
         .leaflet-popup-content-wrapper {
           background: ${isLight ? '#FFFFFF' : '#0B1426'} !important;
@@ -199,7 +203,25 @@ export const AspectWorldMap: React.FC<AspectWorldMapProps> = ({ isLight = false 
       });
     }
 
+    const resizeObserver = new ResizeObserver(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    });
+
+    if (mapContainerRef.current) {
+      resizeObserver.observe(mapContainerRef.current);
+    }
+
+    const timer = setTimeout(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    }, 150);
+
     return () => {
+      clearTimeout(timer);
+      resizeObserver.disconnect();
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
@@ -208,10 +230,10 @@ export const AspectWorldMap: React.FC<AspectWorldMapProps> = ({ isLight = false 
   }, [isLight]);
 
   return (
-    <div className={`rounded-xl border overflow-hidden transition-colors ${isLight ? 'border-slate-200 shadow-sm' : 'border-slate-800'
+    <div className={`rounded-2xl border overflow-hidden flex flex-col transition-colors ${className} ${isLight ? 'border-slate-300 shadow-sm' : 'border-slate-800'
       }`}>
       {/* Header */}
-      <div className={`px-4 py-2.5 border-b flex items-center justify-between flex-wrap gap-2 transition-colors ${isLight ? 'border-slate-200 bg-white text-slate-900' : 'border-slate-800 bg-[#0B1426] text-slate-100'
+      <div className={`px-4 py-2.5 border-b flex items-center justify-between flex-wrap gap-2 shrink-0 transition-colors ${isLight ? 'border-slate-300 bg-white text-[#1F2937]' : 'border-slate-800 bg-[#0B1426] text-slate-100'
         }`}>
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[#C9A227] animate-pulse" />
@@ -219,7 +241,7 @@ export const AspectWorldMap: React.FC<AspectWorldMapProps> = ({ isLight = false 
             Aspect Global Presence — {ASPECT_LOCATIONS.length} Locations Worldwide
           </span>
         </div>
-        <div className={`flex items-center gap-3 text-[10px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
+        <div className={`flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider ${isLight ? 'text-[#6B7280]' : 'text-slate-400'}`}>
           <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#C9A227] inline-block" /> HQ / Bullion</span>
           <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#0E7C7B] inline-block" /> Operations</span>
           <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#4A6FA5] inline-block" /> Investments</span>
@@ -230,7 +252,8 @@ export const AspectWorldMap: React.FC<AspectWorldMapProps> = ({ isLight = false 
       {/* Leaflet Map Container */}
       <div
         ref={mapContainerRef}
-        style={{ height: '260px', width: '100%' }}
+        className="flex-1 w-full min-h-[250px]"
+        style={height ? { height } : { height: '100%' }}
       />
     </div>
   );

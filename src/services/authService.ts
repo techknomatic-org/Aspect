@@ -8,11 +8,12 @@ export const authService = {
     // Simulate network delay
     await new Promise((res) => setTimeout(res, 800));
 
-    if (email.trim().toLowerCase() === 'ceo@aspectone.com' && pass === 'Aspect@123') {
+    const normalizedEmail = email.trim().toLowerCase();
+    if ((normalizedEmail === 'ceo@aspect.global' || normalizedEmail === 'ceo@aspectone.com') && pass === 'Aspect@123') {
       localStorage.setItem(AUTH_KEY, JSON.stringify(DEMO_USER));
       return DEMO_USER;
     }
-    throw new Error('Invalid email or password. Use ceo@aspectone.com / Aspect@123');
+    throw new Error('Invalid credentials. Use ceo@aspect.global / Aspect@123');
   },
 
   getCurrentUser: (): User | null => {

@@ -100,32 +100,32 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Right Utility Icons */}
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-2.5 shrink-0">
         {/* Theme Switcher Toggle */}
         <button
           onClick={toggleTheme}
-          className={`p-2.5 rounded-full border transition-all cursor-pointer ${
+          className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-150 cursor-pointer shadow-sm hover:scale-105 active:scale-95 ${
             theme === 'light'
-              ? 'bg-slate-100 border-slate-300 text-amber-600 hover:bg-slate-200'
+              ? 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900'
               : 'bg-[#172033] border-white/10 text-[#C9A227] hover:text-white hover:border-[#C9A227]/50'
           }`}
           title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
-          {theme === 'dark' ? <Sun className="w-4 h-4 text-[#C9A227]" /> : <Moon className="w-4 h-4 text-[#1F2937]" />}
+          {theme === 'dark' ? <Sun className="w-4 h-4 text-[#C9A227]" /> : <Moon className="w-4 h-4 text-slate-700" />}
         </button>
 
         {/* Notifications Icon */}
         <button
           onClick={onOpenNotifications}
-          className={`relative p-2.5 rounded-full border transition-all cursor-pointer ${
+          className={`relative overflow-visible w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-150 cursor-pointer shadow-sm hover:scale-105 active:scale-95 ${
             theme === 'light'
-              ? 'bg-slate-100 border-slate-300 text-[#1F2937] hover:bg-slate-200'
+              ? 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900'
               : 'bg-[#172033] border-white/10 text-[#94A3B8] hover:text-white hover:border-[#C9A227]/50'
           }`}
           title="Notifications"
         >
           <Bell className="w-4 h-4" />
-          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#E61C40] text-white text-[10px] font-bold flex items-center justify-center shadow-md">
+          <span className="absolute -top-1.5 -right-1.5 w-[18px] h-[18px] rounded-full bg-[#E61C40] text-white text-[10px] font-black flex items-center justify-center shadow-md border-2 border-white dark:border-[#0B1426] leading-none pointer-events-none z-10">
             7
           </span>
         </button>
@@ -133,15 +133,15 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Messages Icon */}
         <button
           onClick={onOpenMessages}
-          className={`relative p-2.5 rounded-full border transition-all cursor-pointer ${
+          className={`relative overflow-visible w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-150 cursor-pointer shadow-sm hover:scale-105 active:scale-95 ${
             theme === 'light'
-              ? 'bg-slate-100 border-slate-300 text-[#1F2937] hover:bg-slate-200'
+              ? 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900'
               : 'bg-[#172033] border-white/10 text-[#94A3B8] hover:text-white hover:border-[#C9A227]/50'
           }`}
           title="Messages"
         >
           <Mail className="w-4 h-4" />
-          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#E61C40] text-white text-[10px] font-bold flex items-center justify-center shadow-md">
+          <span className="absolute -top-1.5 -right-1.5 w-[18px] h-[18px] rounded-full bg-[#E61C40] text-white text-[10px] font-black flex items-center justify-center shadow-md border-2 border-white dark:border-[#0B1426] leading-none pointer-events-none z-10">
             3
           </span>
         </button>
@@ -149,9 +149,9 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Fullscreen Expand Icon */}
         <button
           onClick={toggleFullscreen}
-          className={`p-2.5 rounded-full border transition-all cursor-pointer ${
+          className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-150 cursor-pointer shadow-sm hover:scale-105 active:scale-95 ${
             theme === 'light'
-              ? 'bg-slate-100 border-slate-300 text-[#1F2937] hover:bg-slate-200'
+              ? 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900'
               : 'bg-[#172033] border-white/10 text-[#94A3B8] hover:text-white hover:border-[#C9A227]/50'
           }`}
           title={isFullscreen ? "Exit Fullscreen" : "Fullscreen View"}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, DollarSign, AlertTriangle, Briefcase } from 'lucide-react';
-import { SparklineChart } from '../charts/SparklineChart';
 import { CountUpNumber } from '../common/CountUpNumber';
 import { DashboardOverview } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
@@ -9,184 +8,273 @@ interface TopKPIRowProps {
   overview: DashboardOverview;
 }
 
-const TELEMETRY_REVENUE = [
-  { val: 21452 }, { val: 21700 }, { val: 21600 }, { val: 22100 },
-  { val: 22400 }, { val: 22200 }, { val: 22800 }, { val: 23100 },
-  { val: 22900 }, { val: 23400 }, { val: 23700 }, { val: 23500 },
-  { val: 24000 }, { val: 24300 }, { val: 24100 }, { val: 24500 },
-  { val: 24700 }, { val: 24600 }, { val: 24800 }, { val: 24852 }
-];
+interface ColorThemeConfig {
+  cardClass: string;
+  iconClass: string;
+  trendClass: string;
+}
 
-const TELEMETRY_GROWTH = [
-  { val: 11.3 }, { val: 11.6 }, { val: 11.4 }, { val: 12.0 },
-  { val: 12.4 }, { val: 12.2 }, { val: 12.8 }, { val: 13.3 },
-  { val: 13.0 }, { val: 13.7 }, { val: 14.1 }, { val: 13.9 },
-  { val: 14.5 }, { val: 14.9 }, { val: 14.7 }, { val: 15.2 },
-  { val: 15.6 }, { val: 15.4 }, { val: 15.8 }, { val: 15.9 }
-];
+const getKPIStyles = (color: 'teal' | 'gold' | 'red' | 'blue', isLight: boolean): ColorThemeConfig => {
+  switch (color) {
+    case 'teal':
+      return {
+        cardClass: isLight
+          ? 'bg-gradient-to-br from-[#0E7C7B]/15 via-[#0E7C7B]/8 to-white border-[#0E7C7B]/30 hover:border-[#0E7C7B]/60 shadow-sm hover:shadow-md'
+          : 'bg-gradient-to-br from-[#0E7C7B]/22 via-[#0E7C7B]/10 to-[#0A1624] border-[#0E7C7B]/40 hover:border-[#0E7C7B]/70 shadow-lg shadow-[#0E7C7B]/5',
+        iconClass: 'text-[#0E7C7B]',
+        trendClass: isLight ? 'text-[#0E7C7B]' : 'text-[#2dd4bf]',
+      };
+    case 'gold':
+      return {
+        cardClass: isLight
+          ? 'bg-gradient-to-br from-[#C9A227]/15 via-[#C9A227]/8 to-white border-[#C9A227]/30 hover:border-[#C9A227]/60 shadow-sm hover:shadow-md'
+          : 'bg-gradient-to-br from-[#C9A227]/22 via-[#C9A227]/10 to-[#1F190B] border-[#C9A227]/40 hover:border-[#C9A227]/70 shadow-lg shadow-[#C9A227]/5',
+        iconClass: 'text-[#C9A227]',
+        trendClass: isLight ? 'text-[#B8860B]' : 'text-[#F59E0B]',
+      };
+    case 'red':
+      return {
+        cardClass: isLight
+          ? 'bg-gradient-to-br from-[#E61C40]/15 via-[#E61C40]/8 to-white border-[#E61C40]/30 hover:border-[#E61C40]/60 shadow-sm hover:shadow-md'
+          : 'bg-gradient-to-br from-[#E61C40]/22 via-[#E61C40]/10 to-[#220D14] border-[#E61C40]/40 hover:border-[#E61C40]/70 shadow-lg shadow-[#E61C40]/5',
+        iconClass: 'text-[#E61C40]',
+        trendClass: isLight ? 'text-[#E61C40]' : 'text-[#FB7185]',
+      };
+    case 'blue':
+      return {
+        cardClass: isLight
+          ? 'bg-gradient-to-br from-[#4A6FA5]/15 via-[#4A6FA5]/8 to-white border-[#4A6FA5]/30 hover:border-[#4A6FA5]/60 shadow-sm hover:shadow-md'
+          : 'bg-gradient-to-br from-[#4A6FA5]/22 via-[#4A6FA5]/10 to-[#0F1729] border-[#4A6FA5]/40 hover:border-[#4A6FA5]/70 shadow-lg shadow-[#4A6FA5]/5',
+        iconClass: 'text-[#4A6FA5]',
+        trendClass: isLight ? 'text-[#3B6BA5]' : 'text-[#60A5FA]',
+      };
+  }
+};
 
-const TELEMETRY_ALERTS = [
-  { val: 142 }, { val: 141 }, { val: 140 }, { val: 138 },
-  { val: 139 }, { val: 136 }, { val: 137 }, { val: 134 },
-  { val: 135 }, { val: 133 }, { val: 134 }, { val: 131 },
-  { val: 132 }, { val: 130 }, { val: 131 }, { val: 129 },
-  { val: 130 }, { val: 128 }, { val: 129 }, { val: 128 }
-];
+const TargetCardBox: React.FC<{
+  label: string;
+  badge: string;
+  value: string;
+  statusText: string;
+  themeType: 'teal' | 'gold' | 'red' | 'blue';
+  isLight: boolean;
+}> = ({ label, badge, value, statusText, themeType, isLight }) => {
+  const getStyles = () => {
+    switch (themeType) {
+      case 'gold':
+        return {
+          label: isLight ? 'text-[#B8860B]' : 'text-[#F59E0B]',
+          badge: isLight ? 'bg-[#C9A227]/20 text-[#B8860B]' : 'bg-[#C9A227]/25 text-[#FBBF24]',
+          val: isLight ? 'text-slate-900' : 'text-white',
+          status: isLight ? 'text-[#B8860B]' : 'text-[#FBBF24]',
+          divider: isLight ? 'border-[#C9A227]/30' : 'border-[#C9A227]/35',
+        };
+      case 'red':
+        return {
+          label: isLight ? 'text-[#E61C40]' : 'text-[#FB7185]',
+          badge: isLight ? 'bg-[#E61C40]/15 text-[#E61C40]' : 'bg-[#E61C40]/25 text-[#FDA4AF]',
+          val: isLight ? 'text-slate-900' : 'text-white',
+          status: isLight ? 'text-[#E61C40]' : 'text-[#FDA4AF]',
+          divider: isLight ? 'border-[#E61C40]/30' : 'border-[#E61C40]/35',
+        };
+      case 'blue':
+        return {
+          label: isLight ? 'text-[#3B6BA5]' : 'text-[#60A5FA]',
+          badge: isLight ? 'bg-[#4A6FA5]/15 text-[#3B6BA5]' : 'bg-[#4A6FA5]/25 text-[#93C5FD]',
+          val: isLight ? 'text-slate-900' : 'text-white',
+          status: isLight ? 'text-[#3B6BA5]' : 'text-[#93C5FD]',
+          divider: isLight ? 'border-[#4A6FA5]/30' : 'border-[#4A6FA5]/35',
+        };
+      case 'teal':
+      default:
+        return {
+          label: isLight ? 'text-[#0E7C7B]' : 'text-[#2dd4bf]',
+          badge: isLight ? 'bg-[#0E7C7B]/15 text-[#0E7C7B]' : 'bg-[#0E7C7B]/25 text-[#5eead4]',
+          val: isLight ? 'text-slate-900' : 'text-white',
+          status: isLight ? 'text-[#0E7C7B]' : 'text-[#5eead4]',
+          divider: isLight ? 'border-[#0E7C7B]/30' : 'border-[#0E7C7B]/35',
+        };
+    }
+  };
 
-const TELEMETRY_PIPELINE = [
-  { val: 42100 }, { val: 42600 }, { val: 42400 }, { val: 43200 },
-  { val: 43800 }, { val: 43500 }, { val: 44200 }, { val: 44900 },
-  { val: 44600 }, { val: 45400 }, { val: 46000 }, { val: 45800 },
-  { val: 46600 }, { val: 47200 }, { val: 47000 }, { val: 47900 },
-  { val: 48600 }, { val: 48400 }, { val: 49200 }, { val: 49650 }
-];
+  const s = getStyles();
+
+  return (
+    <div className={`flex flex-col justify-between h-full py-0.5 flex-1 min-w-0 pl-3 lg:pl-3.5 border-l ${s.divider}`}>
+      {/* Top line: TARGET label + Badge */}
+      <div className="flex items-center justify-between gap-1">
+        <span className={`text-xs lg:text-[12px] font-extrabold tracking-wider uppercase ${s.label} whitespace-nowrap`}>
+          {label}
+        </span>
+        <span className={`text-[11px] lg:text-xs font-black px-1.5 lg:px-2 py-0.5 rounded-md ${s.badge} whitespace-nowrap leading-none shrink-0`}>
+          {badge}
+        </span>
+      </div>
+
+      {/* Middle line: Target Big Value */}
+      <div className="my-0.5">
+        <span className={`text-xl lg:text-[22px] xl:text-[24px] font-black tracking-tight leading-none ${s.val} whitespace-nowrap block font-sans`}>
+          {value}
+        </span>
+      </div>
+
+      {/* Bottom line: Status / Delta */}
+      <div className="flex items-center justify-between gap-1 text-xs lg:text-[12px] whitespace-nowrap">
+        <span className={`font-bold ${s.status} whitespace-nowrap`}>
+          {statusText}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 export const TopKPIRow: React.FC<TopKPIRowProps> = ({ overview }) => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
 
-  const cardClass = isLight
-    ? 'bg-[#EEF1F8] border-slate-300 text-[#1F2937] shadow-sm hover:border-[#C9A227]/50'
-    : 'bg-[#172033] border-white/10 text-white shadow-lg hover:border-[#C9A227]/40 hover:bg-[#1E293B]';
+  const textMutedClass = isLight ? 'text-slate-500' : 'text-slate-400';
+  const textTitleClass = isLight ? 'text-slate-800' : 'text-slate-100';
+  const textValueClass = isLight ? 'text-slate-900' : 'text-white';
 
-  const textMutedClass = isLight ? 'text-[#6B7280]' : 'text-[#94A3B8]';
-  const textValueClass = isLight ? 'text-[#1F2937]' : 'text-white';
+  const tealStyles = getKPIStyles('teal', isLight);
+  const redStyles = getKPIStyles('red', isLight);
+  const goldStyles = getKPIStyles('gold', isLight);
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 select-none">
       {/* 1. GROUP REVENUE (YTD) */}
-      <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
-        <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className="flex items-center justify-between gap-2 pr-2">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <DollarSign className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />
-              <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
-                GROUP REVENUE (YTD)
-              </div>
+      <div className={`${tealStyles.cardClass} border rounded-2xl p-3 lg:p-3.5 flex items-center justify-between gap-2.5 h-[114px] relative overflow-hidden transition-all duration-200 group`}>
+        <div className="flex flex-col justify-between h-full py-0.5 shrink-0 min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <DollarSign className={`w-4 h-4 ${tealStyles.iconClass} shrink-0`} />
+            <div className={`text-sm lg:text-[14.5px] font-black tracking-wider ${textTitleClass} uppercase truncate`}>
+              GROUP REVENUE
             </div>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0E7C7B]/15 border border-[#0E7C7B]/30 text-[#0E7C7B] hidden xl:inline-block">
-              Target: ₹22.5k Cr
-            </span>
           </div>
 
           <div className="my-0.5">
-            <span className={`text-xl lg:text-[25px] font-extrabold ${textValueClass} tracking-tight font-sans block leading-none`}>
-              <CountUpNumber end={overview.revenueNumeric || 24852} prefix="₹ " suffix=" Cr" duration={750} />
+            <span className={`text-2xl lg:text-[26px] xl:text-[28px] font-black ${textValueClass} tracking-tight font-sans block leading-none whitespace-nowrap`}>
+              <CountUpNumber end={24.9} decimals={1} prefix="₹ " suffix="k Cr" duration={750} />
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5 text-[11px] whitespace-nowrap">
-            <span className={textMutedClass}>vs LY {overview.revenueVsLY || '₹ 21,452 Cr'}</span>
-            <span className="font-semibold text-[#0E7C7B] flex items-center shrink-0">
-              <TrendingUp className="w-3 h-3 mr-0.5 inline" /> ▲ {overview.revenueChangePct || 15.9}%
+          <div className="flex items-center gap-1.5 text-xs lg:text-[12px] whitespace-nowrap">
+            <span className={textMutedClass}>vs LY ₹ 21.5k Cr</span>
+            <span className={`font-bold ${tealStyles.trendClass} flex items-center shrink-0`}>
+              <TrendingUp className="w-3.5 h-3.5 mr-0.5 inline" /> ▲ {overview.revenueChangePct || 15.9}%
             </span>
           </div>
         </div>
 
-        <div className="w-[115px] lg:w-[135px] h-[52px] flex items-end shrink-0 ml-1.5">
-          <SparklineChart color="#0E7C7B" data={TELEMETRY_REVENUE} height={52} width={135} />
-        </div>
+        <TargetCardBox
+          label="TARGET"
+          badge="110.5%"
+          value="₹ 22.5k Cr"
+          statusText="+₹2.4k Cr"
+          themeType="teal"
+          isLight={isLight}
+        />
       </div>
 
       {/* 2. YoY GROWTH */}
-      <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
-        <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className="flex items-center justify-between gap-2 pr-2">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <TrendingUp className="w-3.5 h-3.5 text-[#0E7C7B] shrink-0" />
-              <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
-                YoY GROWTH
-              </div>
+      <div className={`${tealStyles.cardClass} border rounded-2xl p-3 lg:p-3.5 flex items-center justify-between gap-2.5 h-[114px] relative overflow-hidden transition-all duration-200 group`}>
+        <div className="flex flex-col justify-between h-full py-0.5 shrink-0 min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <TrendingUp className={`w-4 h-4 ${tealStyles.iconClass} shrink-0`} />
+            <div className={`text-sm lg:text-[14.5px] font-black tracking-wider ${textTitleClass} uppercase truncate`}>
+              YoY GROWTH
             </div>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0E7C7B]/15 border border-[#0E7C7B]/30 text-[#0E7C7B] hidden xl:inline-block">
-              Target: 14.0%
-            </span>
           </div>
 
           <div className="my-0.5">
-            <span className={`text-xl lg:text-[25px] font-extrabold ${textValueClass} tracking-tight font-sans block leading-none`}>
+            <span className={`text-2xl lg:text-[26px] xl:text-[28px] font-black ${textValueClass} tracking-tight font-sans block leading-none whitespace-nowrap`}>
               <CountUpNumber end={15.9} decimals={1} suffix="%" duration={750} />
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5 text-[11px] whitespace-nowrap">
+          <div className="flex items-center gap-1.5 text-xs lg:text-[12px] whitespace-nowrap">
             <span className={textMutedClass}>vs LY 11.3%</span>
-            <span className="font-semibold text-[#0E7C7B] flex items-center shrink-0">
-              <TrendingUp className="w-3 h-3 mr-0.5 inline" /> ▲ 4.6pp
+            <span className={`font-bold ${tealStyles.trendClass} flex items-center shrink-0`}>
+              <TrendingUp className="w-3.5 h-3.5 mr-0.5 inline" /> ▲ 4.6pp
             </span>
           </div>
         </div>
 
-        <div className="w-[115px] lg:w-[135px] h-[52px] flex items-end shrink-0 ml-1.5">
-          <SparklineChart color="#0E7C7B" data={TELEMETRY_GROWTH} height={52} width={135} />
-        </div>
+        <TargetCardBox
+          label="TARGET"
+          badge="+1.9pp"
+          value="14.0%"
+          statusText="Exceeded"
+          themeType="teal"
+          isLight={isLight}
+        />
       </div>
 
       {/* 3. ACTIVE ALERTS */}
-      <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
-        <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className="flex items-center justify-between gap-2 pr-2">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <AlertTriangle className="w-3.5 h-3.5 text-[#E61C40] shrink-0" />
-              <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
-                ACTIVE ALERTS
-              </div>
+      <div className={`${redStyles.cardClass} border rounded-2xl p-3 lg:p-3.5 flex items-center justify-between gap-2.5 h-[114px] relative overflow-hidden transition-all duration-200 group`}>
+        <div className="flex flex-col justify-between h-full py-0.5 shrink-0 min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <AlertTriangle className={`w-4 h-4 ${redStyles.iconClass} shrink-0`} />
+            <div className={`text-sm lg:text-[14.5px] font-black tracking-wider ${textTitleClass} uppercase truncate`}>
+              ACTIVE ALERTS
             </div>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#E61C40]/15 border border-[#E61C40]/30 text-[#E61C40] hidden xl:inline-block">
-              14 Resolved
-            </span>
           </div>
 
           <div className="my-0.5">
-            <span className={`text-xl lg:text-[25px] font-extrabold ${textValueClass} tracking-tight font-sans block leading-none`}>
+            <span className={`text-2xl lg:text-[26px] xl:text-[28px] font-black ${textValueClass} tracking-tight font-sans block leading-none whitespace-nowrap`}>
               128
             </span>
           </div>
 
-          <div className="flex items-center gap-2 text-[11px] whitespace-nowrap">
-            <span className="font-semibold text-[#E61C40] flex items-center">
-              <TrendingDown className="w-3 h-3 mr-0.5 inline" /> ▼ 14 (-9.8%) vs prev
+          <div className="flex items-center gap-1.5 text-xs lg:text-[12px] whitespace-nowrap">
+            <span className={`font-bold ${redStyles.trendClass} flex items-center shrink-0`}>
+              <TrendingDown className="w-3.5 h-3.5 mr-0.5 inline" /> ▼ 14 (-9.8%) vs prev
             </span>
           </div>
         </div>
 
-        <div className="w-[115px] lg:w-[135px] h-[52px] flex items-end shrink-0 ml-1.5">
-          <SparklineChart color="#E61C40" data={TELEMETRY_ALERTS} height={52} width={135} />
-        </div>
+        <TargetCardBox
+          label="STATUS"
+          badge="Low Risk"
+          value="14 Resolved"
+          statusText="89.8% SLA"
+          themeType="red"
+          isLight={isLight}
+        />
       </div>
 
       {/* 4. GROUP PIPELINE VALUE */}
-      <div className={`${cardClass} border rounded-2xl p-3.5 lg:p-4 flex items-center justify-between h-[108px] relative overflow-hidden transition-all duration-200 group`}>
-        <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-          <div className="flex items-center justify-between gap-2 pr-2">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <Briefcase className="w-3.5 h-3.5 text-[#C9A227] shrink-0" />
-              <div className={`text-[11px] font-semibold tracking-wider ${textMutedClass} uppercase truncate`}>
-                PIPELINE VALUE
-              </div>
+      <div className={`${goldStyles.cardClass} border rounded-2xl p-3 lg:p-3.5 flex items-center justify-between gap-2.5 h-[114px] relative overflow-hidden transition-all duration-200 group`}>
+        <div className="flex flex-col justify-between h-full py-0.5 shrink-0 min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <Briefcase className={`w-4 h-4 ${goldStyles.iconClass} shrink-0`} />
+            <div className={`text-sm lg:text-[14.5px] font-black tracking-wider ${textTitleClass} uppercase truncate`}>
+              PIPELINE VALUE
             </div>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#C9A227]/15 border border-[#C9A227]/30 text-[#C9A227] hidden xl:inline-block">
-              Target: ₹45.0k Cr
-            </span>
           </div>
 
           <div className="my-0.5">
-            <span className={`text-xl lg:text-[25px] font-extrabold ${textValueClass} tracking-tight font-sans block leading-none`}>
-              <CountUpNumber end={49650} prefix="₹ " suffix=" Cr" duration={750} />
+            <span className={`text-2xl lg:text-[26px] xl:text-[28px] font-black ${textValueClass} tracking-tight font-sans block leading-none whitespace-nowrap`}>
+              <CountUpNumber end={49.7} decimals={1} prefix="₹ " suffix="k Cr" duration={750} />
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5 text-[11px] whitespace-nowrap">
-            <span className={textMutedClass}>vs LY ₹ 42,100 Cr</span>
-            <span className="font-semibold text-[#C9A227] flex items-center shrink-0">
-              <TrendingUp className="w-3 h-3 mr-0.5 inline" /> ▲ 17.9%
+          <div className="flex items-center gap-1.5 text-xs lg:text-[12px] whitespace-nowrap">
+            <span className={textMutedClass}>vs LY ₹ 42.1k Cr</span>
+            <span className={`font-bold ${goldStyles.trendClass} flex items-center shrink-0`}>
+              <TrendingUp className="w-3.5 h-3.5 mr-0.5 inline" /> ▲ 17.9%
             </span>
           </div>
         </div>
 
-        <div className="w-[115px] lg:w-[135px] h-[52px] flex items-end shrink-0 ml-1.5">
-          <SparklineChart color="#C9A227" data={TELEMETRY_PIPELINE} height={52} width={135} />
-        </div>
+        <TargetCardBox
+          label="TARGET"
+          badge="110.3%"
+          value="₹ 45.0k Cr"
+          statusText="+₹4.7k Cr"
+          themeType="gold"
+          isLight={isLight}
+        />
       </div>
     </div>
   );

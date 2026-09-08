@@ -9,6 +9,7 @@ import { AspectGlanceRow } from '../components/dashboard/AspectGlanceRow';
 import { dashboardService } from '../services/dashboardService';
 import { ecosystemService } from '../services/ecosystemService';
 import { DashboardOverview, EcosystemBusiness, AIInsight, KPICardData } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 interface DashboardPageProps {
   onNavigateBusiness?: (businessId: string) => void;
@@ -20,8 +21,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateBusiness
   const [insights, setInsights] = useState<AIInsight[]>([]);
   const [bottomCards, setBottomCards] = useState<KPICardData[]>([]);
 
-  // Which business world was clicked on the 3D map
   const [selectedBusiness, setSelectedBusiness] = useState<EcosystemBusiness | null>(null);
+  const [showAIInsights, setShowAIInsights] = useState(false);
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
 
   useEffect(() => {
     (async () => {
@@ -35,11 +38,18 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateBusiness
       setBusinesses(b);
       setInsights(ins);
       setBottomCards(bot);
+
+      // Default to Realty fixed on landing page
+      const defaultRealty = b.find((item) => item.id === 'realty') || b[0] || null;
+      setSelectedBusiness(defaultRealty);
     })();
   }, []);
 
   const handleSelectBusiness = (b: EcosystemBusiness) => {
     setSelectedBusiness(b);
+    if (b.id === 'realty') {
+      window.open('http://139.59.29.162:8089/', '_blank', 'noopener,noreferrer');
+    }
   };
 
   const handleOpenFullPage = (businessId: string) => {
@@ -59,34 +69,58 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateBusiness
     );
   }
 
+  const activeBiz = selectedBusiness || businesses.find((b) => b.id === 'realty') || businesses[0];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="w-full h-[calc(100vh-64px)] overflow-hidden p-4 lg:p-5 flex flex-col justify-between gap-4 select-none"
+      className="w-full h-[calc(100vh-64px)] overflow-hidden p-3 lg:p-4 flex flex-col gap-3 select-none"
     >
-      {/* ① TOP STRATEGIC KPI STRIP — 4 Cards (Fixed height 108px) */}
+      {/* ① TOP STRATEGIC KPI STRIP — 4 Cards */}
       <div className="shrink-0">
         <TopKPIRow overview={overview} />
       </div>
 
-      {/* ② HERO GRID: 3D Ecosystem (Left) + AI Insights Panel (Right) (Flex 1 remaining height) */}
+      {/* ② HERO GRID: 3D Ecosystem (Left) + Selected Industry / AI Insights Panel (Right) */}
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5">
-        {/* Left — 3D Orbit Ecosystem (8 Cols) */}
-        <div className="lg:col-span-8 h-full min-h-0">
+        {/* Left — 3D Orbit Ecosystem (7 Cols) */}
+        <div className="lg:col-span-7 h-full min-h-0">
           <EcosystemCanvas
             businesses={businesses}
+            selectedBusinessId={activeBiz?.id}
             onSelectBusiness={handleSelectBusiness}
           />
         </div>
 
-        {/* Right — AI Insights Panel / Business KPI Panel (4 Cols) */}
-        <div className="lg:col-span-4 h-full min-h-0 flex flex-col">
+        {/* Right — Selected Industry KPI Panel (Expanded to 5 Cols) with AI Insights toggle */}
+        <div className="lg:col-span-5 h-full min-h-0 flex flex-col">
           <AnimatePresence mode="wait">
-            {selectedBusiness ? (
+            {showAIInsights ? (
               <motion.div
-                key={`kpi-${selectedBusiness.id}`}
+                key="ai-insights"
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -16 }}
+                transition={{ duration: 0.22, ease: 'easeOut' }}
+                className="h-full min-h-0"
+              >
+                <AIInsightsPanel
+                  insights={insights}
+                  onViewAllClick={() => {
+                    if (onNavigateBusiness) {
+                      onNavigateBusiness('ai-copilot');
+                    }
+                  }}
+                  onBackToBusiness={() => setShowAIInsights(false)}
+                  businessName={activeBiz?.name}
+                  onSelectInsight={(_ins: AIInsight) => { }}
+                />
+              </motion.div>
+            ) : activeBiz ? (
+              <motion.div
+                key={`kpi-${activeBiz.id}`}
                 initial={{ opacity: 0, x: 16 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -16 }}
@@ -94,32 +128,18 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateBusiness
                 className="h-full min-h-0"
               >
                 <BusinessKPIPanel
-                  business={selectedBusiness}
-                  onClose={() => setSelectedBusiness(null)}
+                  business={activeBiz}
+                  onClose={() => setShowAIInsights(true)}
                   onOpenFullPage={handleOpenFullPage}
+                  onToggleAIInsights={() => setShowAIInsights(true)}
                 />
               </motion.div>
-            ) : (
-              <motion.div
-                key="ai-insights"
-                initial={{ opacity: 0, x: -16 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 16 }}
-                transition={{ duration: 0.22, ease: 'easeOut' }}
-                className="h-full min-h-0"
-              >
-                <AIInsightsPanel
-                  insights={insights}
-                  onViewAllClick={() => { }}
-                  onSelectInsight={(_ins: AIInsight) => { }}
-                />
-              </motion.div>
-            )}
+            ) : null}
           </AnimatePresence>
         </div>
       </div>
 
-      {/* ③ ASPECT ONE AT A GLANCE — 4 Bottom Financial Cards (Fixed height 108px) */}
+      {/* ③ ASPECT ONE AT A GLANCE — 4 Bottom Financial Cards */}
       <div className="shrink-0">
         <AspectGlanceRow cards={bottomCards} />
       </div>
